@@ -81,7 +81,7 @@ export const TIMELINE_2025 = [
     month: 'August', 
     title: 'The Great Tides of Fundy', 
     content: 'A true highlight of our trip! We joined Grandma and Grandpa at the Bay of Fundy, where we got to play on the ocean floor as the massive 12-foot tide receded before our eyes.', 
-    type: 'tide',
+    type: 'text',
     imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766519593/August2_ee1hjx.jpg' 
   },
   { 
@@ -133,16 +133,49 @@ export const FRANCE_COORDS = [
 ];
 
 // New Road Trip Coordinates (Longitude, Latitude for Mapbox)
-export const PEI_COORDS = [
-  [-71.9545, 42.4939], // 7 Navajo St, Hubbardston, MA
-  [-70.6150, 41.5510], // Falmouth, MA
-  [-66.9670, 45.1830], // Digdeguash, Canada
-  [-63.6910, 46.2510], // Borden-Carleton, PEI (Confederation Bridge)
-  [-63.3790, 46.4910], // Cavendish, PEI
-  [-63.0730, 46.4150], // Dalvay by the Sea, PEI
-  [-63.1290, 46.2350], // Charlottetown, PEI
-  [-63.6400, 46.5600], // Thunder Cove Beach, PEI
-  [-64.5780, 45.8220], // Hopewell Rocks Provincial Park, NB
-  [-70.1060, 43.8550], // Freeport, Maine
-  [-72.0060, 42.4840], // Hubbardston, MA (Home)
+// export const PEI_COORDS = [
+//   [-71.9545, 42.4939], // 7 Navajo St, Hubbardston, MA
+//   [-70.6150, 41.5510], // Falmouth, MA
+//   [-66.9670, 45.1830], // Digdeguash, Canada
+//   [-63.6910, 46.2510], // Borden-Carleton, PEI (Confederation Bridge)
+//   [-63.3790, 46.4910], // Cavendish, PEI
+//   [-63.0730, 46.4150], // Dalvay by the Sea, PEI
+//   [-63.1290, 46.2350], // Charlottetown, PEI
+//   [-63.6400, 46.5600], // Thunder Cove Beach, PEI
+//   [-64.5780, 45.8220], // Hopewell Rocks Provincial Park, NB
+//   [-70.1060, 43.8550], // Freeport, Maine
+//   [-71.9545, 42.4939], // Hubbardston, MA (Home)
+// ];
+
+export const PEI_STOPS = [
+  { coords: [-71.9545, 42.4939], title: "Hubbardston, MA (Home)" },
+  { coords: [-70.6150, 41.5510], title: "Falmouth, MA" },
+  { coords: [-70.6150, 41.5210], title: "Edgartwon, Martha's Vineyard" },
+  { coords: [-66.9670, 45.1830], title: "Digdeguash, Canada" },
+  { coords: [-63.6910, 46.2510], title: "Borden-Carleton, PEI (Confederation Bridge)" },
+  { coords: [-63.3790, 46.4910], title: "Cavendish, PEI" },
+  { coords: [-63.0730, 46.4150], title: "Dalvay by the Sea, PEI" },
+  { coords: [-63.1290, 46.2350], title: "Charlottetown, PEI" },
+  { coords: [-63.6400, 46.5600], title: "Thunder Cove Beach, PEI" },
+  { coords: [-64.5780, 45.8220], title: "Hopewell Rocks Provincial Park, NB" },
+  { coords: [-70.1060, 43.8550], title: "Freeport, Maine" },
+  // { coords: [-71.9545, 42.4939], title: "Hubbardston, MA (Home)" },
+];
+
+// We keep this for your route line logic (Source/Layer)
+export const PEI_COORDS = PEI_STOPS.map(stop => stop.coords);
+
+// Mapping the stop index to the specific Cloudinary Public IDs
+export const imageMap = [
+  "v1766526806/stop-0_ujaqga", // Stop 0
+  "v1766526824/stop-1_tb6gyq", // Stop 1
+  "v1766526823/stop-2_xb6ccp", // Stop 2
+  "v1766526818/stop-3_epknd1", // Stop 3
+  "v1766526811/stop-4_rr2gkc", // Stop 4
+  "v1766526818/stop-5_i8nlxp", // Stop 5
+  "v1766526815/stop-6_uds14j", // Stop 6
+  "v1766526821/stop-7_t0enxi", // Stop 7
+  "v1766526822/stop-8_ca1hk3", // Stop 8
+  "v1766526826/stop-9_fv6mej", // Stop 9
+  "v1766526839/stop-10_cou5si" // Stop 10
 ];

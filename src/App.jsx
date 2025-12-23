@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Map, Source, Layer, Marker } from 'react-map-gl/mapbox'; 
+import { Map, Source, Layer, Marker, Popup } from 'react-map-gl/mapbox'; 
 import { useInView } from 'react-intersection-observer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Map as MapIcon, X } from 'lucide-react';
-import { TIMELINE_2025, PEI_COORDS } from './data';
+import { TIMELINE_2025, PEI_COORDS, PEI_STOPS, imageMap } from './data';
+import { MapPin } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -29,11 +30,22 @@ const ImageWithLoading = ({ src, alt, className }) => {
   );
 };
 
+// Helper to generate Cloudinary URLs
+const getCloudinaryUrl = (index) => {
+  const cloudName = 'dhuaoanpn';
+  
+  const publicId = imageMap[index];
+
+  // We keep the w_400 transformation so the popups load fast!
+  return `https://res.cloudinary.com/${cloudName}/image/upload/w_400,c_fill/${publicId}.jpg`;
+};
+
 export default function App() { 
   const [isPlaying, setIsPlaying] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [showFooter, setShowFooter] = useState(false);
   const [routeData, setRouteData] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const audioRef = useRef(new Audio('/tranquil.mp3'));
   const mapRef = useRef();
 
@@ -111,35 +123,77 @@ export default function App() {
 
       {/* 3. The Map Modal (Unchanged) */}
       <AnimatePresence>
-        {showMap && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-white flex flex-col">
-            <div className="p-4 border-b flex justify-between items-center">
-              <h2 className="font-serif text-xl">Our Road Trip to PEI</h2>
-              <button 
-                onClick={() => setShowMap(false)} 
-                className="p-1 bg-transparent hover:bg-stone-100 border-none text-stone-500 hover:text-stone-800 transition-colors"
-              >
-                {/* 3. Give the icon a specific size */}
-                <X size={28} />
-              </button>
-            </div>
-            <div className="flex-1">
-              <Map ref={mapRef} initialViewState={{ longitude: -67, latitude: 44, zoom: 5.5 }}
-                mapStyle="mapbox://styles/mapbox/outdoors-v12" mapboxAccessToken={MAPBOX_TOKEN}>
-                {routeData && (
-                  <Source type="geojson" data={routeData}>
-                    <Layer type="line" paint={{ 'line-color': '#2563eb', 'line-width': 3 }} />
-                  </Source>
-                )}
-                {PEI_COORDS.map((coord, idx) => (
-                  <Marker key={idx} longitude={coord[0]} latitude={coord[1]} color="red"
-                    onClick={() => mapRef.current.flyTo({ center: coord, zoom: 10 })} />
-                ))}
-              </Map>
-            </div>
-          </motion.div>
-        )}
+      {showMap && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] bg-white flex flex-col">
+          <div className="p-4 border-b flex justify-between items-center">
+            <h2 className="font-serif text-xl">Our Road Trip to PEI</h2>
+            <button 
+              onClick={() => setShowMap(false)} 
+              className="p-1 bg-transparent hover:bg-stone-100 border-none text-stone-500 hover:text-stone-800 transition-colors"
+            >
+              <X size={28} />
+            </button>
+          </div>
+          <div className="flex-1">
+            <Map ref={mapRef} initialViewState={{ longitude: -67, latitude: 44, zoom: 5.5 }}
+              mapStyle="mapbox://styles/mapbox/outdoors-v12" mapboxAccessToken={MAPBOX_TOKEN}>
+              
+              {/* Route Line remains the same using PEI_COORDS */}
+              {routeData && (
+                <Source type="geojson" data={routeData}>
+                  <Layer type="line" paint={{ 'line-color': '#2563eb', 'line-width': 3 }} />
+                </Source>
+              )}
+
+              {/* Updated Marker Loop using PEI_STOPS */}
+              {PEI_STOPS.map((stop, idx) => (
+                <Marker key={idx} longitude={stop.coords[0]} latitude={stop.coords[1]}>
+                  <MapPin 
+                    className="text-orange-600 hover:text-green-700 transition-colors cursor-pointer" 
+                    size={34}
+                    onClick={() => {
+                      mapRef.current.flyTo({ center: stop.coords, zoom: 7 });
+                      // We now save the title into the state
+                      setSelectedLocation({ 
+                        longitude: stop.coords[0], 
+                        latitude: stop.coords[1], 
+                        index: idx,
+                        title: stop.title 
+                      });
+                    }} 
+                  />
+                </Marker>
+              ))}
+
+              {/* Updated Popup with Title and Cloudinary Image */}
+              {selectedLocation && (
+                <Popup
+                  longitude={selectedLocation.longitude}
+                  latitude={selectedLocation.latitude}
+                  anchor="bottom"
+                  onClose={() => setSelectedLocation(null)}
+                  closeOnClick={false}
+                >
+                  <div className="p-2 max-w-[220px]">
+                    <h3 className="font-serif font-bold text-sm mb-2 text-stone-800 border-b pb-1">
+                      {selectedLocation.title}
+                    </h3>
+                    <img 
+                      src={getCloudinaryUrl(selectedLocation.index)} 
+                      alt={selectedLocation.title} 
+                      className="rounded mb-2 w-full h-32 object-cover shadow-sm"
+                    />
+                    <p className="text-[10px] font-sans italic text-stone-500 leading-tight">
+                      Stop #{selectedLocation.index + 1} of our journey through Canada and back!
+                    </p>
+                  </div>
+                </Popup>
+              )}
+            </Map>
+          </div>
+        </motion.div>
+      )}
         {showFooter && (
           <motion.footer
             initial={{ y: 100, opacity: 0 }}
