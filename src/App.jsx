@@ -3,7 +3,7 @@ import { Map, Source, Layer, Marker, Popup } from 'react-map-gl/mapbox';
 import { useInView } from 'react-intersection-observer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Map as MapIcon, X } from 'lucide-react';
-import { TIMELINE_2025, PEI_COORDS, PEI_STOPS, imageMap } from './data';
+import { TIMELINE_2025, PEI_COORDS, PEI_STOPS } from './data';
 import { MapPin } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -30,15 +30,6 @@ const ImageWithLoading = ({ src, alt, className }) => {
   );
 };
 
-// Helper to generate Cloudinary URLs
-const getCloudinaryUrl = (index) => {
-  const cloudName = 'dhuaoanpn';
-  
-  const publicId = imageMap[index];
-
-  // We keep the w_400 transformation so the popups load fast!
-  return `https://res.cloudinary.com/${cloudName}/image/upload/w_400,c_fill/${publicId}.jpg`;
-};
 
 export default function App() { 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -159,7 +150,8 @@ export default function App() {
                         longitude: stop.coords[0], 
                         latitude: stop.coords[1], 
                         index: idx,
-                        title: stop.title 
+                        title: stop.title,
+                        img: stop.imageId 
                       });
                     }} 
                   />
@@ -180,7 +172,7 @@ export default function App() {
                       {selectedLocation.title}
                     </h3>
                     <img 
-                      src={getCloudinaryUrl(selectedLocation.index)} 
+                      src={`https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/${selectedLocation.img}.jpg`} 
                       alt={selectedLocation.title} 
                       className="rounded mb-2 w-full h-32 object-cover shadow-sm"
                     />
