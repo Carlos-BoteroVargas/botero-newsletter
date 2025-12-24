@@ -130,9 +130,9 @@ export default function App() {
             <h2 className="font-serif text-xl">Our Road Trip to PEI</h2>
             <button 
               onClick={() => setShowMap(false)} 
-              className="p-1 bg-transparent hover:bg-stone-100 border-none text-stone-500 hover:text-stone-800 transition-colors"
+              className="p-1 !bg-transparent border-none !text-stone-500 hover:!text-stone-800 transition-colors appearance-none outline-none"
             >
-              <X size={28} />
+              <X size={28} strokeWidth={2.5} />
             </button>
           </div>
           <div className="flex-1">
