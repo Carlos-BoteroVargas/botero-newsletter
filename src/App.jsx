@@ -137,7 +137,7 @@ export default function App() {
           </div>
           <div className="flex-1">
             <Map ref={mapRef} initialViewState={{ longitude: -67, latitude: 44, zoom: 5.5 }}
-              mapStyle="mapbox://styles/mapbox/outdoors-v12" mapboxAccessToken={MAPBOX_TOKEN}>
+              mapStyle="mapbox://styles/mapbox/light-v11" mapboxAccessToken={MAPBOX_TOKEN}> //mapbox://styles/mapbox/outdoors-v12
               
               {/* Route Line remains the same using PEI_COORDS */}
               {routeData && (
