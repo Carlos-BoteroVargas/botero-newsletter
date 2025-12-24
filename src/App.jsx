@@ -276,8 +276,12 @@ function TimelineItem({ entry, onOpenTrip }) {
         <h2 className="text-4xl font-serif mb-6">{entry.title}</h2>
         <p className="text-stone-600 mb-8 leading-relaxed">{entry.content}</p>
         {entry.type === 'trip' && (
-          <button onClick={onOpenTrip} className="bg-stone-900 text-white px-8 py-3 rounded-full flex items-center gap-2 hover:bg-blue-700 transition-colors">
-            <MapIcon size={18} /> View Driving Route
+          <button 
+            onClick={onOpenTrip} 
+            className="appearance-none !bg-stone-900 text-white px-8 py-4 rounded-full flex items-center gap-2 hover:bg-blue-700 active:scale-95 transition-all shadow-lg"
+          >
+            <MapIcon size={18} /> 
+            <span className="font-semibold">View Driving Route</span>
           </button>
         )}
       </div>
