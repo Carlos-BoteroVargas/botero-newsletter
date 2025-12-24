@@ -125,17 +125,72 @@ export const FRANCE_COORDS = [
 ];
 
 export const PEI_STOPS = [
-  { coords: [-71.9545, 42.4939], title: "Hubbardston, MA (Home)", imageId: "v1766526806/stop-0_ujaqga" },
-  { coords: [-70.6150, 41.5510], title: "Falmouth, MA", imageId: "v1766526824/stop-1_tb6gyq" },
-  { coords: [-70.6150, 41.5210], title: "Edgartwon, Martha's Vineyard", imageId: "v1766526823/stop-2_xb6ccp" },
-  { coords: [-66.9670, 45.1830], title: "Digdeguash, Canada", imageId: "v1766526818/stop-3_epknd1" },
-  { coords: [-63.6910, 46.2510], title: "Borden-Carleton, PEI (Confederation Bridge)", imageId: "v1766526811/stop-4_rr2gkc" },
-  { coords: [-63.3790, 46.4910], title: "Cavendish, PEI", imageId: "v1766526818/stop-5_i8nlxp" },
-  { coords: [-63.0730, 46.4150], title: "Dalvay by the Sea, PEI", imageId: "v1766526815/stop-6_uds14j" },
-  { coords: [-63.1290, 46.2350], title: "Charlottetown, PEI", imageId: "v1766526821/stop-7_t0enxi" },
-  { coords: [-63.6400, 46.5600], title: "Thunder Cove Beach, PEI", imageId: "v1766526822/stop-8_ca1hk3" },
-  { coords: [-64.5780, 45.8220], title: "Hopewell Rocks Provincial Park, NB", imageId: "v1766526826/stop-9_fv6mej" },
-  { coords: [-70.1060, 43.8550], title: "Freeport, Maine", imageId: "v1766526839/stop-10_cou5si" },
+  { 
+    coords: [-71.9545, 42.4939], 
+    title: "Hubbardston, MA (Home)", 
+    imageId: "v1766526806/stop-0_ujaqga",
+    description: "The starting line and home base for our 2025 adventures." 
+  },
+  { 
+    coords: [-70.6150, 41.5510], 
+    title: "Falmouth, MA", 
+    imageId: "v1766526824/stop-1_tb6gyq",
+    description: "Celebrating a beautiful milestone: Grandma and Grandpa’s 50th Wedding Anniversary." 
+  },
+  { 
+    coords: [-70.4150, 41.5210], 
+    title: "Edgartwon, Martha's Vineyard", 
+    imageId: "v1766526823/stop-2_xb6ccp",
+    description: "A classic island escape filled with historic charm and coastal views." 
+  },
+  { 
+    coords: [-66.9670, 45.1830], 
+    title: "Digdeguash, CA", 
+    imageId: "v1766526818/stop-3_epknd1",
+    description: "Our first official stop after crossing the border into the Canadian Maritimes." 
+  },
+  { 
+    coords: [-63.6910, 46.2510], 
+    title: "Borden-Carleton, PEI", 
+    imageId: "v1766526811/stop-4_rr2gkc",
+    description: "The gateway to the island, marked by the engineering marvel of the Confederation Bridge." 
+  },
+  { 
+    coords: [-63.3790, 46.4910], 
+    title: "Cavendish, PEI", 
+    imageId: "v1766526818/stop-5_i8nlxp",
+    description: "Exploring the rolling green hills and the literary magic of Anne of Green Gables." 
+  },
+  { 
+    coords: [-63.0730, 46.4150], 
+    title: "Dalvay by the Sea", 
+    imageId: "v1766526815/stop-6_uds14j",
+    description: "Historic coastal elegance and quiet beaches on the northern shore." 
+  },
+  { 
+    coords: [-63.1290, 46.2350], 
+    title: "Charlottetown, PEI", 
+    imageId: "v1766526821/stop-7_t0enxi",
+    description: "Strolling through the vibrant streets of the historic Birthplace of Confederation." 
+  },
+  { 
+    coords: [-63.6400, 46.5600], 
+    title: "Thunder Cove Beach", 
+    imageId: "v1766526822/stop-8_ca1hk3",
+    description: "Finding the famous red cliffs and the hidden 'Teacup Rock' along the shore." 
+  },
+  { 
+    coords: [-64.5780, 45.8220], 
+    title: "Hopewell Rocks, NB", 
+    imageId: "v1766526826/stop-9_fv6mej",
+    description: "Walking on the ocean floor as the massive Bay of Fundy tide receded before our eyes." 
+  },
+  { 
+    coords: [-70.1060, 43.8550], 
+    title: "Freeport, Maine", 
+    imageId: "v1766526839/stop-10_cou5si",
+    description: "A final stop for shopping (L.L. Bean anyone?) and lobster rolls on our way back home." 
+  },
 ];
 
 // We keep this for the route line logic (Source/Layer)

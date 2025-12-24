@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Map, Source, Layer, Marker, Popup } from 'react-map-gl/mapbox'; 
 import { useInView } from 'react-intersection-observer';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX, Map as MapIcon, X } from 'lucide-react';
 import { TIMELINE_2025, PEI_COORDS, PEI_STOPS } from './data';
@@ -8,8 +9,6 @@ import { MapPin } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-
-
 
 // Reusable Image component with Shimmer Loading
 const ImageWithLoading = ({ src, alt, className }) => {
@@ -39,6 +38,39 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const audioRef = useRef(new Audio('/tranquil.mp3'));
   const mapRef = useRef();
+
+  // Helper function to navigate between stops from Popup
+  const navigateStop = (direction) => {
+    if (!selectedLocation) return;
+  
+    const totalStops = PEI_STOPS.length;
+    let newIdx;
+  
+    if (direction === 'next') {
+      newIdx = (selectedLocation.index + 1) % totalStops;
+    } else {
+      newIdx = (selectedLocation.index - 1 + totalStops) % totalStops;
+    }
+  
+    const nextStop = PEI_STOPS[newIdx];
+    
+    // Smoother transition: added duration (in ms) and essential flag
+    mapRef.current?.flyTo({ 
+      center: nextStop.coords, 
+      zoom: 7,
+      duration: 2000, // 1.5 seconds for a graceful slide
+      essential: true 
+    });
+  
+    setSelectedLocation({
+      longitude: nextStop.coords[0],
+      latitude: nextStop.coords[1],
+      index: newIdx,
+      title: nextStop.title,
+      img: nextStop.imageId,
+      desc: nextStop.description,
+    });
+  };
 
   useEffect(() => {
     const fetchRoute = async () => {
@@ -137,24 +169,28 @@ export default function App() {
                 </Source>
               )}
 
-              {/* Updated Marker Loop using PEI_STOPS */}
+              {/* Updated Marker Loop with Numbered Pins */}
               {PEI_STOPS.map((stop, idx) => (
                 <Marker key={idx} longitude={stop.coords[0]} latitude={stop.coords[1]}>
-                  <MapPin 
-                    className="text-orange-600 hover:text-green-700 transition-colors cursor-pointer" 
-                    size={34}
+                  <div 
+                    className="group relative flex items-center justify-center cursor-pointer"
                     onClick={() => {
                       mapRef.current.flyTo({ center: stop.coords, zoom: 7 });
-                      // We now save the title into the state
                       setSelectedLocation({ 
                         longitude: stop.coords[0], 
                         latitude: stop.coords[1], 
                         index: idx,
                         title: stop.title,
-                        img: stop.imageId 
+                        img: stop.imageId,
+                        desc: stop.description,
                       });
                     }} 
-                  />
+                  >
+                    {/* The Pin Circle */}
+                    <div className="w-8 h-8 bg-orange-400 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-xs font-bold transition-all group-hover:bg-green-700 group-hover:scale-110">
+                      {idx + 1}
+                    </div>
+                  </div>
                 </Marker>
               ))}
 
@@ -163,22 +199,49 @@ export default function App() {
                 <Popup
                   longitude={selectedLocation.longitude}
                   latitude={selectedLocation.latitude}
-                  anchor="bottom"
+                  anchor="top"
                   onClose={() => setSelectedLocation(null)}
                   closeOnClick={false}
+                  maxWidth="350px" // Allows the internal div to expand
                 >
-                  <div className="p-2 max-w-[220px]">
-                    <h3 className="font-serif font-bold text-sm mb-2 text-stone-800 border-b pb-1">
-                      {selectedLocation.title}
-                    </h3>
-                    <img 
-                      src={`https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/${selectedLocation.img}.jpg`} 
-                      alt={selectedLocation.title} 
-                      className="rounded mb-2 w-full h-32 object-cover shadow-sm"
-                    />
-                    <p className="text-[10px] font-sans italic text-stone-500 leading-tight">
-                      Stop #{selectedLocation.index + 1} of our journey through Canada and back!
-                    </p>
+                  {/* flex container to put buttons on the sides */}
+                  <div className="flex items-center gap-1 max-w-[255px]">
+                    
+                    {/* Left Chevron - Transparent background */}
+                    {selectedLocation.index !== 0 && (<button 
+                      onClick={(e) => { e.stopPropagation(); navigateStop('prev'); }}
+                      className="p-1 hover:scale-110 transition-transform bg-transparent border-none cursor-pointer outline-none"
+                      style={{ backgroundColor: "transparent", border: "0" }}
+                    >
+                      <p className="text-stone-600 text-[18px]" > {"<"} </p>
+                    </button>)}
+
+                    {/* Main Content Area */}
+                    <div className="flex-1 bg-white p-1">
+                      <h3 className="font-serif font-bold text-sm mb-2 text-stone-800 border-b pb-1">
+                        {selectedLocation.title}
+                      </h3>
+                      
+                      <img 
+                        src={`https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/${selectedLocation.img}.jpg`} 
+                        alt={selectedLocation.title} 
+                        className="rounded mb-2 w-full h-full object-cover shadow-sm"
+                      />
+                      
+                      <p className="text-[12px] font-sans italic text-stone-500 leading-tight">
+                        Stop #{selectedLocation.index + 1}: {selectedLocation.desc}
+                      </p>
+                    </div>
+
+                    {/* Right Chevron - Transparent background */}
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); navigateStop('next'); }}
+                      className="p-1 hover:scale-110 transition-transform bg-transparent border-none cursor-pointer outline-none"
+                      style={{ backgroundColor: "transparent", border: "0" }}
+                    >
+                      {/* <ChevronRight size={12} className="text-stone-600 stroke-[3px]" /> */}
+                      <p className="text-stone-600 text-[18px]" > {">"} </p>
+                    </button>
                   </div>
                 </Popup>
               )}
