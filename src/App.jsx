@@ -1,21 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
-// import { TIMELINE_2025 } from './data/2025';
+import Papa from 'papaparse';
 import RoadTripMap from './components/RoadTripMap';
 import { ImageWithLoading, TimelineItem } from './components/NewsletterComponents';
 
-
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-
-  
+const GOOGLE_SHEET_CSV_URL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || '';
 
 export default function App() { 
   const [isPlaying, setIsPlaying] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [showFooter, setShowFooter] = useState(false);
   const audioRef = useRef(new Audio('/tranquil.mp3'));
+  
   const DEFAULT_YEAR = '2025';
   const [year, setYear] = useState(DEFAULT_YEAR);
   const [timeline, setTimeline] = useState([]);
@@ -31,49 +29,101 @@ export default function App() {
     let isMounted = true;
 
     const loadYear = async (yr) => {
+      let loadedTimeline = [];
+      let loadedStops = [];
+
       try {
-        const module = await import(`./data/${yr}.js`);
-        const timelineKey = Object.keys(module).find(k => k.startsWith('TIMELINE'));
-        const loadedTimeline = module[timelineKey] || module.TIMELINE || [];
-        const stopsKey = Object.keys(module).find(k => k.endsWith('_STOPS'));
-        const loadedStops = module[stopsKey] || [];
-        // const title = module.MAP_TITLE || (yr === '2025' ? 'Our Road Trip to PEI' : 'Our August Road Trip to PEI');
+        // 1. Primary logic for 2026: Try Google Sheets first
+        if (yr === '2026') {
+          try {
+            const response = await fetch(GOOGLE_SHEET_CSV_URL);
+            console.log("Here it is", response);
+            
+            if (!response.ok) throw new Error("Sheet fetch failed");
+
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('text/html')) {
+              const html = await response.text();
+              console.warn('Spreadsheet URL returned HTML — likely an invalid URL or missing VITE_ prefix. Response snippet:', html.slice(0, 400));
+              throw new Error('Spreadsheet returned HTML instead of CSV');
+            }
+            
+            const csvText = await response.text();
+            const result = Papa.parse(csvText, { 
+              header: true, 
+              skipEmptyLines: true 
+            });
+            console.log("Here is the result", result);
+
+            if (result.errors && result.errors.length) {
+              console.warn('Papa.parse errors:', result.errors);
+              // optionally: throw new Error('CSV parse errors');
+            }            
+
+            // Map sheet columns to component props
+            loadedTimeline = result.data.map(row => ({
+              month: row.month,
+              title: row.title,
+              content: row.content,
+              type: row.type,
+              imageUrl: row.imageUrl,
+              isPortrait: row['Image Orientation (isPortrait)']?.toUpperCase() === 'TRUE'
+            }));
+
+            if (loadedTimeline.length === 0) throw new Error("Sheet is empty");
+            console.log("Loaded 2026 data from Google Sheets.");
+          } catch (sheetErr) {
+            console.warn("Spreadsheet load failed, falling back to local 2026.js", sheetErr);
+            // Fall through to local file loading logic
+          }
+        }
+
+        // 2. Local File Loading (Fallback for 2026 or primary for other years)
+        if (loadedTimeline.length === 0) {
+          const module = await import(`./data/${yr}.js`);
+          
+          // Use specific TIMELINE_YYYY key or generic TIMELINE
+          const timelineKey = `TIMELINE_${yr}`;
+          loadedTimeline = module[timelineKey] || module.TIMELINE || [];
+          
+          const stopsKey = Object.keys(module).find(k => k.endsWith('_STOPS'));
+          loadedStops = module[stopsKey] || [];
+          console.log(`Loaded ${yr} from local data file.`);
+        }
 
         if (!isMounted) return;
+
         setYear(yr);
         setTimeline(loadedTimeline);
         setStops(loadedStops);
-        // setMapTitle(title);
         document.title = `Botero Family - ${yr}`;
+        setNotFoundYear(null);
+
       } catch (err) {
         console.warn(`No data for year ${yr}, falling back to ${DEFAULT_YEAR}`, err);
         if (yr !== DEFAULT_YEAR) {
-          // Show a small 404 banner and schedule a redirect to the default year
-          if (redirectTimerRef.current) {
-            clearInterval(redirectTimerRef.current);
-            redirectTimerRef.current = null;
-          }
-          setNotFoundYear(yr);
-          const COUNT = 7; // seconds to redirect
-          setRedirectCountdown(COUNT);
-
-          // Load default data immediately so user sees content
-          loadYear(DEFAULT_YEAR);
-
-          // Start countdown to replace the URL to the default year
-          let secs = COUNT;
-          redirectTimerRef.current = setInterval(() => {
-            secs -= 1;
-            setRedirectCountdown(secs);
-            if (secs <= 0) {
-              clearInterval(redirectTimerRef.current);
-              redirectTimerRef.current = null;
-              window.history.replaceState({}, '', `/${DEFAULT_YEAR}`);
-              setNotFoundYear(null);
-            }
-          }, 1000);
+          handleRedirect(yr);
         }
       }
+    };
+
+    const handleRedirect = (yr) => {
+      if (redirectTimerRef.current) clearInterval(redirectTimerRef.current);
+      setNotFoundYear(yr);
+      let secs = 7;
+      setRedirectCountdown(secs);
+
+      loadYear(DEFAULT_YEAR);
+
+      redirectTimerRef.current = setInterval(() => {
+        secs -= 1;
+        setRedirectCountdown(secs);
+        if (secs <= 0) {
+          clearInterval(redirectTimerRef.current);
+          window.history.replaceState({}, '', `/${DEFAULT_YEAR}`);
+          setNotFoundYear(null);
+        }
+      }, 1000);
     };
 
     const getYearFromPath = () => {
@@ -88,7 +138,7 @@ export default function App() {
     return () => { 
       isMounted = false; 
       window.removeEventListener('popstate', handlePop); 
-      if (redirectTimerRef.current) { clearInterval(redirectTimerRef.current); redirectTimerRef.current = null; }
+      if (redirectTimerRef.current) clearInterval(redirectTimerRef.current);
     };
   }, []);
 
@@ -103,8 +153,10 @@ export default function App() {
   return (
     <div className="bg-stone-50 min-h-screen text-stone-900 pb-24">
       {/* Audio Control */}
-      <button onClick={() => { setIsPlaying(!isPlaying); isPlaying ? audioRef.current.pause() : audioRef.current.play(); }}
-        className="fixed bottom-23 right-6 z-50 p-4 bg-white rounded-full shadow-xl border border-stone-200">
+      <button 
+        onClick={() => { setIsPlaying(!isPlaying); isPlaying ? audioRef.current.pause() : audioRef.current.play(); }}
+        className="fixed bottom-23 right-6 z-50 p-4 bg-white rounded-full shadow-xl border border-stone-200"
+      >
         {isPlaying ? <Volume2 className="text-blue-600" /> : <VolumeX className="text-stone-400" />}
       </button>
 
@@ -127,34 +179,36 @@ export default function App() {
         </motion.div>
       </header>
 
-      {/* 2. Chronological Timeline */}
-        {/* Not-found / Redirect Banner */}
-        {notFoundYear && (
-          <div className="fixed inset-0 z-[70] flex items-start justify-center pt-24 px-4 pointer-events-none">
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-r from-red-50 via-green-50 to-yellow-50 border-2 border-red-200 p-4 rounded-xl shadow-2xl max-w-xl w-full pointer-events-auto">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="text-3xl">🎄</motion.div>
-                  <div>
-                    <h3 className="font-bold text-stone-800">Year {notFoundYear} not found</h3>
-                    <p className="text-sm text-stone-600 mt-1">Redirecting to <span className="font-semibold text-stone-800">{DEFAULT_YEAR}</span> in <span className="font-mono">{redirectCountdown}s</span></p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => {
-                    if (redirectTimerRef.current) { clearInterval(redirectTimerRef.current); redirectTimerRef.current = null; }
-                    window.history.replaceState({}, '', `/${DEFAULT_YEAR}`);
-                    setNotFoundYear(null);
-                  }} className="px-3 py-1 bg-green-600 text-white rounded shadow hover:bg-green-700">Go now</button>
+      {/* Not-found / Redirect Banner */}
+      {notFoundYear && (
+        <div className="fixed inset-0 z-[70] flex items-start justify-center pt-24 px-4 pointer-events-none">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-r from-red-50 via-green-50 to-yellow-50 border-2 border-red-200 p-4 rounded-xl shadow-2xl max-w-xl w-full pointer-events-auto">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="text-3xl">🎄</motion.div>
+                <div>
+                  <h3 className="font-bold text-stone-800">Year {notFoundYear} not found</h3>
+                  <p className="text-sm text-stone-600 mt-1">Redirecting to <span className="font-semibold text-stone-800">{DEFAULT_YEAR}</span> in <span className="font-mono">{redirectCountdown}s</span></p>
                 </div>
               </div>
-            </motion.div>
-          </div>
-        )}
+              <button onClick={() => {
+                if (redirectTimerRef.current) clearInterval(redirectTimerRef.current);
+                window.history.replaceState({}, '', `/${DEFAULT_YEAR}`);
+                setNotFoundYear(null);
+              }} className="px-3 py-1 bg-green-600 text-white rounded shadow hover:bg-green-700">Go now</button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
+      {/* 2. Chronological Timeline */}
       <main className="max-w-4xl mx-auto py-24 px-6 space-y-48">
         {timeline.map((entry, i) => (
-          <TimelineItem key={i} entry={entry} onOpenTrip={() => {setShowMap(true); setMapTitle(entry.title)}} />
+          <TimelineItem 
+            key={i} 
+            entry={entry} 
+            onOpenTrip={() => {setShowMap(true); setMapTitle(entry.title)}} 
+          />
         ))}
       </main>
 
