@@ -28,7 +28,7 @@ export default function App() {
   useEffect(() => {
     let isMounted = true;
 
-    const loadYear = async (yr) => {
+    const loadYear = async (yr, { clearNotFound = true } = {}) => {
       let loadedTimeline = [];
       let loadedStops = [];
 
@@ -72,6 +72,16 @@ export default function App() {
 
             if (loadedTimeline.length === 0) throw new Error("Sheet is empty");
             console.log("Loaded 2026 data from Google Sheets.");
+
+            // Also load stops from the local 2026 module so maps have data (FRANCE_STOPS / PARIS_STOPS)
+            try {
+              const stopsModule = await import(`./data/${yr}.js`);
+              const stopsKey = Object.keys(stopsModule).find(k => k.endsWith('_STOPS'));
+              loadedStops = stopsModule[stopsKey] || [];
+              if (loadedStops.length) console.log(`Loaded ${yr} stops from local data file for map.`);
+            } catch (stopsErr) {
+              console.warn(`Failed to load ${yr} stops from local file`, stopsErr);
+            }
           } catch (sheetErr) {
             console.warn("Spreadsheet load failed, falling back to local 2026.js", sheetErr);
             // Fall through to local file loading logic
@@ -97,7 +107,7 @@ export default function App() {
         setTimeline(loadedTimeline);
         setStops(loadedStops);
         document.title = `Botero Family - ${yr}`;
-        setNotFoundYear(null);
+        if (clearNotFound) setNotFoundYear(null);
 
       } catch (err) {
         console.warn(`No data for year ${yr}, falling back to ${DEFAULT_YEAR}`, err);
@@ -113,7 +123,7 @@ export default function App() {
       let secs = 7;
       setRedirectCountdown(secs);
 
-      loadYear(DEFAULT_YEAR);
+      loadYear(DEFAULT_YEAR, { clearNotFound: false });
 
       redirectTimerRef.current = setInterval(() => {
         secs -= 1;
