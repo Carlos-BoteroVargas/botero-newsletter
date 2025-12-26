@@ -15,7 +15,7 @@ export const TIMELINE_2025 = [
   },
   { 
     month: 'March', 
-    title: 'Isa goes to tthe Office', 
+    title: 'Isa goes to the Office', 
     content: 'Here we started a great tradition of visiting "Daddy" in Cambridge.', 
     type: 'text',
     imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766519613/March_zbtb8h.jpg' 
