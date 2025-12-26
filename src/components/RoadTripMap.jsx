@@ -29,7 +29,7 @@ export default function RoadTripMap({
     );
 
     return {
-      longitude: (sum.lng / stops.length) - 2,
+      longitude: (sum.lng / stops.length),
       latitude: (sum.lat / stops.length) - 1,
     };
   };
@@ -37,7 +37,7 @@ export default function RoadTripMap({
   const center = getInitialCenter();
   
   // Dynamic Zoom for Mobile (smaller zoom = wider view)
-  const initialZoom = typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 5.5;
+  const initialZoom = typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 6;
 
   // Independent Route Fetching logic based on provided stops
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function RoadTripMap({
     fetchRoute();
   }, [isOpen, stops, mapboxToken]);
 
-    const navigateStop = (direction) => {
+  const navigateStop = (direction) => {
     if (!selectedLocation) return;
   
     const totalStops = stops.length;
@@ -96,14 +96,14 @@ export default function RoadTripMap({
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] bg-white flex flex-col"
+      className="fixed inset-0 z-60 bg-white flex flex-col"
     >
       {/* Header Area */}
       <div className="p-4 border-b flex justify-between items-center">
         <h2 className="font-serif text-xl">{title}</h2>
         <button 
           onClick={onClose} 
-          className="p-1 !bg-transparent border-none !text-stone-500 hover:!text-stone-800 transition-colors appearance-none outline-none"
+          className="p-1 bg-transparent border-0 text-stone-500 hover:text-stone-800 transition-colors appearance-none outline-none"
         >
           <X size={28} strokeWidth={2.5} />
         </button>
@@ -162,7 +162,7 @@ export default function RoadTripMap({
               closeOnClick={false}
               maxWidth="350px"
             >
-              <div className="flex items-center gap-1 max-w-[255px]">
+              <div className="flex items-center gap-1 max-w-[16rem]">
                 {/* Left Button */}
                 {selectedLocation.index !== 0 && (
                   <button 
@@ -180,7 +180,7 @@ export default function RoadTripMap({
                     {selectedLocation.title}
                   </h3>
                   <img 
-                    src={`https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/${selectedLocation.img}.jpg`} 
+                    src={selectedLocation.img.startsWith("https") ? selectedLocation.img : `https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/${selectedLocation.img}.jpg`} 
                     alt={selectedLocation.title} 
                     className="rounded mb-2 w-full h-full object-cover shadow-sm"
                   />

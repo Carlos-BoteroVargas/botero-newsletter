@@ -1,16 +1,44 @@
-# React + Vite
+# Newsletter Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a React-based Newsletter application. It allows users to create, manage, and send updates via an SPA. 
 
-Currently, two official plugins are available:
+The app integrates with Mapbox for location-based features.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Live Site
+[Live Newsletter](https://botero-news.netlify.com/)
 
-## React Compiler
+## Purpose
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The Newsletter application is designed to:
+- Collect our Family's Highlights each year
+- Send regular updates to family and friends
+- Provide location-aware content using Mapbox
 
-## Expanding the ESLint configuration
+## Setup Instructions
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Clone the repository:**
+   git clone https://github.com/Carlos-BoteroVargas/botero-newsletter.git cd `botero-newsletter`
+2. **Install dependencies:**
+   npm install
+3. **Configure environment variables:**
+    - Create a `.env.local` file in the root directory.
+    - Add your Mapbox token:
+      ```
+      VITE_MAPBOX_TOKEN=<mapbox_token_here>
+      ```
+
+4. **Run the application:**
+   npm run dev
+5. **Open in your browser:**
+    - Visit `http://localhost:5173` (or the port shown in your terminal).
+
+## Technologies Used
+
+- React
+- Vite
+- Mapbox
+- npm
+
+## License
+
+MIT

@@ -31,25 +31,6 @@ export const ImageWithLoading = ({ src, alt, className }) => {
   );
 };
 
-export const TidePool = ({ inView, src }) => (
-  <div className="relative w-full h-full bg-stone-100 overflow-hidden rounded-lg shadow-inner">
-    <div className="absolute inset-0 z-0">
-      <ImageWithLoading src={src} alt="Tide Pool" className="w-full h-full object-cover" />
-    </div>
-    <motion.div 
-      initial={{ height: "100%" }}
-      animate={inView ? { height: "0%" } : { height: "100%" }}
-      transition={{ duration: 6, ease: [0.45, 0.05, 0.55, 0.95] }}
-      className="absolute top-0 left-0 right-0 bg-blue-600/40 backdrop-blur-[4px] z-20 flex items-center justify-center border-b-2 border-white/30"
-    >
-      {!inView && (
-        <motion.div className="text-white font-serif italic text-xl drop-shadow-lg text-center px-4">
-          The Bay of Fundy <br/> <span className="text-xs tracking-widest uppercase opacity-80">High Tide</span>
-        </motion.div>
-      )}
-    </motion.div>
-  </div>
-);
 
 export const TimelineItem = ({ entry, onOpenTrip }) => {
   const { ref, inView } = useInView({ threshold: 0.4 });
@@ -67,7 +48,7 @@ export const TimelineItem = ({ entry, onOpenTrip }) => {
         )}
       </div>
       <div className={`flex-1 w-full max-w-sm mx-auto bg-white p-4 shadow-2xl border-4 border-white transition-all duration-1000 ${inView ? 'rotate-0' : 'rotate-3'} relative overflow-hidden ${entry.isPortrait ? 'aspect-[3/4]' : 'relative h-64 md:h-80'}`}>
-        {entry.type === 'tide' ? <TidePool inView={inView} src={entry.imageUrl} /> : <ImageWithLoading src={entry.imageUrl} alt={entry.title} />}
+        <ImageWithLoading src={entry.imageUrl} alt={entry.title} />
       </div>
     </motion.div>
   );
