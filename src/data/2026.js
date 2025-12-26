@@ -21,8 +21,7 @@ export const TIMELINE_2026 = [
     title: 'Berkshire Colors & Pumpkins', 
     content: 'Wating for the adventures.', 
     type: 'text',
-    imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766758745/1766706743059_qhcxya.png',
-    isPortrait: true 
+    imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766777933/PXL_20251018_145312409_yqe3ps.jpg', 
   },
 ];
 
