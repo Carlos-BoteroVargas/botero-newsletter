@@ -4,6 +4,7 @@ import { Map, Source, Layer, Marker, Popup, NavigationControl } from 'react-map-
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import IconFor from './Icons.jsx';
 
 export default function RoadTripMap({ 
   isOpen, 
@@ -29,7 +30,7 @@ export default function RoadTripMap({
     );
 
     return {
-      longitude: (sum.lng / stops.length) - 2,
+      longitude: (sum.lng / stops.length),
       latitude: (sum.lat / stops.length) - 1,
     };
   };
@@ -62,7 +63,7 @@ export default function RoadTripMap({
     fetchRoute();
   }, [isOpen, stops, mapboxToken]);
 
-    const navigateStop = (direction) => {
+  const navigateStop = (direction) => {
     if (!selectedLocation) return;
   
     const totalStops = stops.length;
@@ -96,14 +97,14 @@ export default function RoadTripMap({
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] bg-white flex flex-col"
+      className="fixed inset-0 z-60 bg-white flex flex-col"
     >
       {/* Header Area */}
       <div className="p-4 border-b flex justify-between items-center">
         <h2 className="font-serif text-xl">{title}</h2>
         <button 
           onClick={onClose} 
-          className="p-1 !bg-transparent border-none !text-stone-500 hover:!text-stone-800 transition-colors appearance-none outline-none"
+          className="p-1 bg-transparent border-0 text-stone-500 hover:text-stone-800 transition-colors appearance-none outline-none"
         >
           <X size={28} strokeWidth={2.5} />
         </button>
@@ -132,7 +133,7 @@ export default function RoadTripMap({
 
           {stops.map((stop, idx) => (
             <Marker key={idx} longitude={stop.coords[0]} latitude={stop.coords[1]}>
-              <div 
+              {/* <div 
                 className="group relative flex items-center justify-center cursor-pointer"
                 onClick={() => {
                   mapRef.current.flyTo({ center: stop.coords, zoom: 7 });
@@ -149,7 +150,25 @@ export default function RoadTripMap({
                 <div className="w-8 h-8 bg-orange-400 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-xs font-bold transition-all group-hover:bg-green-700 group-hover:scale-110">
                   {idx + 1}
                 </div>
-              </div>
+              </div> */}
+              <button
+                onClick={() => { mapRef.current.flyTo({ center: stop.coords, zoom: 7.5 }); setSelectedLocation({ 
+                    longitude: stop.coords[0], 
+                    latitude: stop.coords[1], 
+                    index: idx,
+                    title: stop.title,
+                    img: stop.imageId,
+                    desc: stop.description,
+                  }); }}
+                // className="min-w-[44px] min-h-[44px] p-0 rounded-full flex items-center justify-center touch-manipulation"
+                className="group min-w-[44px] min-h-[44px] p-0 rounded-full flex items-center justify-center touch-manipulation"
+                aria-label={stop.title}
+                style={{ background: 'transparent', border: 0 }}
+              >
+                <div className="w-10 h-10 md:w-12 md:h-12">
+                  <IconFor name={stop.icon} className="w-full h-full" title={stop.title} idx={idx} />
+                </div>
+              </button>
             </Marker>
           ))}
 
@@ -162,7 +181,7 @@ export default function RoadTripMap({
               closeOnClick={false}
               maxWidth="350px"
             >
-              <div className="flex items-center gap-1 max-w-[255px]">
+              <div className="flex items-center gap-1 max-w-[16rem]">
                 {/* Left Button */}
                 {selectedLocation.index !== 0 && (
                   <button 
@@ -180,7 +199,7 @@ export default function RoadTripMap({
                     {selectedLocation.title}
                   </h3>
                   <img 
-                    src={`https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/${selectedLocation.img}.jpg`} 
+                    src={selectedLocation.img.startsWith("https") ? selectedLocation.img : `https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/${selectedLocation.img}.jpg`} 
                     alt={selectedLocation.title} 
                     className="rounded mb-2 w-full h-full object-cover shadow-sm"
                   />
