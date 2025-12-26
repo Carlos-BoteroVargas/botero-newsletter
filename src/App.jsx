@@ -16,8 +16,7 @@ export default function App() {
   const [showMap, setShowMap] = useState(false);
   const [showFooter, setShowFooter] = useState(false);
   const audioRef = useRef(new Audio('/tranquil.mp3'));
-  // Dynamic year selection based on the URL path (e.g., /2025)
-  const DEFAULT_YEAR = '2026';
+  const DEFAULT_YEAR = '2025';
   const [year, setYear] = useState(DEFAULT_YEAR);
   const [timeline, setTimeline] = useState([]);
   const [stops, setStops] = useState([]);
@@ -118,8 +117,12 @@ export default function App() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="relative z-20 text-center px-6">
           <div className="bg-white/90 backdrop-blur-md p-8 md:p-16 shadow-2xl border-8 border-white">
             <h1 className="text-5xl md:text-7xl font-serif mb-4 italic">Merry Christmas!</h1>
-            <p className="tracking-[0.3em] uppercase text-stone-500 text-sm">{`The Botero Family - ${year}`}</p>
-            <p className="tracking-[0.3em] text-stone-400 mt-6 text-xs">(scroll down to see the news!)</p>
+            <p className="tracking-[0.3em] uppercase text-stone-500 text-sm">
+              {`The Botero Family - ${year}`}
+            </p>
+            <p className="tracking-[0.3em] text-stone-400 mt-6 text-xs">
+              (scroll down to see the news!)
+            </p>
           </div>
         </motion.div>
       </header>

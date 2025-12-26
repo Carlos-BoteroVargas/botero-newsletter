@@ -3,25 +3,25 @@
 export const TIMELINE_2026 = [
   { 
     month: 'January', 
-    title: 'The Great Outdoors', 
-    content: 'All the Woods and Snow we would have ever wanted.', 
+    title: 'The Great Adventure Begins', 
+    content: 'Our little girl is here, and we can\'t wait to show her around! Celebrating 15 years of marriage with the start of a new chapter as a family of six. Excited for the adventures that lie ahead in 2026! ', 
     type: 'text',
-    imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766519593/January_eaxfd8.jpg',
-    isPortrait: false // Optional: true
+    imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766766750/Baby_cy0cuz.png',
+    isPortrait: true // Optional: false
   },
   { 
     month: 'June', 
     title: 'Our very own Tour de France', 
-    content: 'The journey continued with an unforgettable long-distance road trip to Prince Edward Island. Traveling with Grandma and Grandpa made every mile of the Maritime landscape even more special.', 
+    content: 'To celebrate our milestone, we took the girls on a great adventure in the land of Alexander Dumas, Victor Hugo, and Napoleon. From the lavender fields of Provence to the majestic châteaux of the Loire Valley, every moment was filled with wonder and discovery. Here\'s to many more journeys together as a family!', 
     type: 'trip', // ?? generates the map link!!
     imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766758726/1766758660141_tk1afq.png' 
   },
   { 
     month: 'October', 
     title: 'Berkshire Colors & Pumpkins', 
-    content: 'Fall took us to Western Mass. We marveled at the stunning foliage from the top of Mount Greylock and wandered through the enchanting "Great Pumpkin Show" at the historic Naumkeag mansion.', 
+    content: 'Wating for the adventures.', 
     type: 'text',
-    imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766519620/October_wvmjkr.jpg',
+    imageUrl: 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1766758745/1766706743059_qhcxya.png',
     isPortrait: true 
   },
 ];
@@ -32,7 +32,7 @@ export const FRANCE_STOPS = [
   {
     coords: [7.21014, 43.66752], // NICE: Lng, Lat
     title: "Nice Airport (Arrival)",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766758745/1766706743059_qhcxya.png",
     description: "The 15-year milestone journey begins!"
   },
   // {
@@ -111,7 +111,8 @@ export const FRANCE_STOPS = [
     coords: [4.5350, 43.9476],
     title: "Pont du Gard",
     imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "The massive Roman aqueduct crossing the Gardon."
+    description: "The massive Roman aqueduct crossing the Gardon, made 2000 years ago.",
+    icon: "aqueduct"
   },
   // {
   //   coords: [4.35961, 43.8349], //43.8349, 4.35961
@@ -171,7 +172,8 @@ export const FRANCE_STOPS = [
     coords: [1.2611, 45.83361], //45.83361, 1.2611
     title: "Limoges",
     imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "The cliffside sanctuary and pilgrimage site."
+    description: "The pottery capital",
+    icon: "pottery"
   },
   // {
   //   coords: [1.0620, 47.3304],
@@ -225,7 +227,8 @@ export const FRANCE_STOPS = [
     coords: [-1.51145, 48.63606], // MONT SAINT-MICHEL: Lng is Negative (West) || 48.61778, -1.51033
     title: "Mont Saint-Michel",
     imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "Magical morning tour of the island abbey."
+    description: "Magical morning tour of the island abbey.",
+    icon: "abbey"
   },
   {
     coords: [-2.02359, 48.65096], // 48.65096, -2.02359
@@ -243,7 +246,8 @@ export const FRANCE_STOPS = [
     coords: [2.2945, 48.8584],
     title: "Tour Eiffel",
     imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "The Iron Lady—first greeting of the trip."
+    description: "The Iron Lady: first greeting of the trip.",
+    icon: "eiffel"
   },
 ];
 
