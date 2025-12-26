@@ -215,7 +215,7 @@ export const FRANCE_STOPS = [
     coords: [-0.55182, 47.47116], //47.47116, -0.55182
     title: "Angers",
     imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "The ancient gate to Normandy."
+    description: "The ancient gate to Normandy. 2"
   },
   {
     coords: [-1.20906, 48.35463], //48.35463, -1.20906
