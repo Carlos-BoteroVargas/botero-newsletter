@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 import RoadTripMap from './components/RoadTripMap';
 import { ImageWithLoading, TimelineItem } from './components/NewsletterComponents';
 import HolidayCard from './components/HolidayCard';
+import Polaroids from './components/Polaroids';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const GOOGLE_SHEET_CSV_URL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || '';
@@ -194,6 +195,11 @@ export default function App() {
           </div>
         </motion.div>
       </header>
+
+      {/* Polaroids */}
+      <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-6 mt-10 z-4">
+        <Polaroids />
+      </motion.section>
 
       {/* Holiday Card (placed right below the hero) */}
       <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-6 mt-10 z-4">
