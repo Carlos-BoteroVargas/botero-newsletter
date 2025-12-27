@@ -14,7 +14,7 @@ export default function App() {
   const [showFooter, setShowFooter] = useState(false);
   const audioRef = useRef(new Audio('/tranquil.mp3'));
   
-  const DEFAULT_YEAR = '2025';
+  const DEFAULT_YEAR = '2026';
   const [year, setYear] = useState(DEFAULT_YEAR);
   const [timeline, setTimeline] = useState([]);
   const [stops, setStops] = useState([]);
@@ -37,7 +37,6 @@ export default function App() {
         if (yr === '2026') {
           try {
             const response = await fetch(GOOGLE_SHEET_CSV_URL);
-            console.log("Here it is", response);
             
             if (!response.ok) throw new Error("Sheet fetch failed");
 
@@ -53,7 +52,6 @@ export default function App() {
               header: true, 
               skipEmptyLines: true 
             });
-            console.log("Here is the result", result);
 
             if (result.errors && result.errors.length) {
               console.warn('Papa.parse errors:', result.errors);
@@ -71,7 +69,6 @@ export default function App() {
             }));
 
             if (loadedTimeline.length === 0) throw new Error("Sheet is empty");
-            console.log("Loaded 2026 data from Google Sheets.");
 
             // Also load stops from the local 2026 module so maps have data (FRANCE_STOPS / PARIS_STOPS)
             try {

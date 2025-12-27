@@ -32,7 +32,8 @@ export const FRANCE_STOPS = [
     coords: [7.21014, 43.66752], // NICE: Lng, Lat
     title: "Nice Airport (Arrival)",
     imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766758745/1766706743059_qhcxya.png",
-    description: "The 15-year milestone journey begins!"
+    description: "The 15-year milestone journey begins!",
+    icon: 'start'
   },
   // {
   //   coords: [7.1221, 43.6967],
@@ -122,8 +123,9 @@ export const FRANCE_STOPS = [
   {
     coords: [2.3631, 43.20705], //43.20705, 2.3631
     title: "Château Comtal, Carcassonne",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "The legendary fortified citadel."
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766795184/castle_dfjcze.jpg",
+    description: "The legendary fortified citadel.",
+    icon: "castle"
   },
   // {
   //   coords: [2.13845, 43.70726], //43.70726, 2.13845
