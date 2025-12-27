@@ -1,7 +1,6 @@
 // https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png
 
-export const NEWS_MESSAGE_2026 = `We wish you the merriest holiday season and a very happy new year! 
-          We cannot wait to meet Baby Botero... sending much love and prayer.`
+export const NEWS_MESSAGE_2026 = `2026 has been a whirlwind of finish lines and first steps for our family of six here in Hubbardston. From the joy of watching our baby girl celebrate her very first birthday to the nonstop energy of Luca and the girls, our home has never felt more alive. This year's journey took us from the sun-drenched streets of Nice and Paris during our summer in France to the emotional 26.2-mile finish line in October, proving that with enough love (and a little grit), any goal is reachable. As we look back on a year defined by adventure and growth, we are so grateful for the friends and family who cheered us on through every mile and milestone. Wishing you a beautiful holiday season and a New Year full of your own big dreams!`
 
 export const TIMELINE_2026 = [
   { 
