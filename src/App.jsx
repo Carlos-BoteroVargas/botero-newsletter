@@ -4,6 +4,7 @@ import { Volume2, VolumeX } from 'lucide-react';
 import Papa from 'papaparse';
 import RoadTripMap from './components/RoadTripMap';
 import { ImageWithLoading, TimelineItem } from './components/NewsletterComponents';
+import HolidayCard from './components/HolidayCard';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const GOOGLE_SHEET_CSV_URL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || '';
@@ -20,10 +21,13 @@ export default function App() {
   const [stops, setStops] = useState([]);
   const [mapTitle, setMapTitle] = useState('Road Trip');
 
+  const [cardContent, setCardContent] = useState('Merry Christmas to all, and a happy New Year!');
+
   // 404 / redirect state
   const [notFoundYear, setNotFoundYear] = useState(null);
   const [redirectCountdown, setRedirectCountdown] = useState(0);
   const redirectTimerRef = useRef(null);
+  let loadedNewsMessage = '';
 
   useEffect(() => {
     let isMounted = true;
@@ -59,7 +63,7 @@ export default function App() {
             }            
 
             // Map sheet columns to component props
-            loadedTimeline = result.data.map(row => ({
+            loadedTimeline = result.data.slice().reverse().map(row => ({
               month: row.month,
               title: row.title,
               content: row.content,
@@ -75,6 +79,8 @@ export default function App() {
               const stopsModule = await import(`./data/${yr}.js`);
               const stopsKey = Object.keys(stopsModule).find(k => k.endsWith('_STOPS'));
               loadedStops = stopsModule[stopsKey] || [];
+              // grab NEWS_MESSAGE_YYYY (or generic NEWS_MESSAGE) if present
+              loadedNewsMessage = stopsModule[`NEWS_MESSAGE_${yr}`] || stopsModule.NEWS_MESSAGE || loadedNewsMessage;
               if (loadedStops.length) console.log(`Loaded ${yr} stops from local data file for map.`);
             } catch (stopsErr) {
               console.warn(`Failed to load ${yr} stops from local file`, stopsErr);
@@ -95,6 +101,8 @@ export default function App() {
           
           const stopsKey = Object.keys(module).find(k => k.endsWith('_STOPS'));
           loadedStops = module[stopsKey] || [];
+          // grab NEWS_MESSAGE_YYYY (or generic NEWS_MESSAGE) if present
+          loadedNewsMessage = module[`NEWS_MESSAGE_${yr}`] || module.NEWS_MESSAGE || loadedNewsMessage;
           console.log(`Loaded ${yr} from local data file.`);
         }
 
@@ -103,6 +111,7 @@ export default function App() {
         setYear(yr);
         setTimeline(loadedTimeline);
         setStops(loadedStops);
+        setCardContent(loadedNewsMessage || '');
         document.title = `Botero Family - ${yr}`;
         if (clearNotFound) setNotFoundYear(null);
 
@@ -185,6 +194,11 @@ export default function App() {
           </div>
         </motion.div>
       </header>
+
+      {/* Holiday Card (placed right below the hero) */}
+      <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-6 mt-10 z-4">
+        <HolidayCard cardContent={cardContent} />
+      </motion.section>
 
       {/* Not-found / Redirect Banner */}
       {notFoundYear && (

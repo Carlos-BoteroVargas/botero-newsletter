@@ -120,7 +120,7 @@ export default function RoadTripMap({
             pitch: 50,    // 50 degrees tilt for a 3D look
             bearing: -10  // Slight rotation 
           }}
-          mapStyle="mapbox://styles/mapbox/light-v11" 
+          mapStyle="mapbox://styles/mapbox/outdoors-v12" //light-v11 dark-v11 outdoors-v11 satellite-streets-v11
           mapboxAccessToken={mapboxToken}
         >
           <NavigationControl position="top-right" visualizePitch={true} />

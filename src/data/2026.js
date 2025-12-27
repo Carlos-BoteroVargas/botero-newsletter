@@ -1,5 +1,8 @@
 // https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png
 
+export const NEWS_MESSAGE_2026 = `We wish you the merriest holiday season and a very happy new year! 
+          We cannot wait to meet Baby Botero... sending much love and prayer.`
+
 export const TIMELINE_2026 = [
   { 
     month: 'January', 
@@ -98,7 +101,7 @@ export const FRANCE_STOPS = [
   {
     coords: [5.0515, 43.9194],
     title: "L'Isle-sur-la-Sorgue (Overnight)",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863514/1766862338080_pdsang.png",
     description: "The 'Venice of Provence' known for its canals."
   },
   // {
@@ -110,7 +113,7 @@ export const FRANCE_STOPS = [
   {
     coords: [4.5350, 43.9476],
     title: "Pont du Gard",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863400/1766860314372_szrjbz.png",
     description: "The massive Roman aqueduct crossing the Gardon, made 2000 years ago.",
     icon: "aqueduct"
   },
@@ -123,7 +126,7 @@ export const FRANCE_STOPS = [
   {
     coords: [2.3631, 43.20705], //43.20705, 2.3631
     title: "Château Comtal, Carcassonne",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766795184/castle_dfjcze.jpg",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863550/1766860812561_ficy4z.png",
     description: "The legendary fortified citadel.",
     icon: "castle"
   },
@@ -142,7 +145,7 @@ export const FRANCE_STOPS = [
   {
     coords: [1.9536, 44.0639],
     title: "Cordes-sur-Ciel",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863550/1766860812561_ficy4z.png",
     description: "The village that sits 'above the clouds'."
   },
   // {
@@ -172,7 +175,7 @@ export const FRANCE_STOPS = [
   {
     coords: [1.2611, 45.83361], //45.83361, 1.2611
     title: "Limoges",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863546/1766862472437_r6mbtl.png",
     description: "The pottery capital",
     icon: "pottery"
   },
@@ -185,19 +188,19 @@ export const FRANCE_STOPS = [
   {
     coords: [1.0703, 47.32486], //47.32486, 1.0703
     title: "Château de Chenonceau",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863546/1766862472437_r6mbtl.png",
     description: "The Great Castle over the River."
   },
   {
     coords: [1.14294, 47.50867], //47.50867, 1.14294
     title: "Les Hauts de Loire",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863508/1766862687208_t8adfv.png",
     description: "The official 15th Anniversary Dinner, in an ancient Hunting Lodge, 2 Michelin Stars."
   },
   {
     coords: [0.51483, 47.3402], //47.3402, 0.51483
     title: "Château de Villandry",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863508/1766862687208_t8adfv.png",
     description: "The Great Castle over the River."
   },
   // {
@@ -219,23 +222,23 @@ export const FRANCE_STOPS = [
     description: "The ancient gate to Normandy. 2"
   },
   {
-    coords: [-1.20906, 48.35463], //48.35463, -1.20906
-    title: "Château de Fougères",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "Largest and Oldest Medieval Castle in France."
+    coords: [-2.02359, 48.65096], // 48.65096, -2.02359
+    title: "Saint-Malo (Intra-Muros)",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863481/1766862822595_shjyzf.png",
+    description: "Old city walls, ou Westen-most point in the trip."
   },
   {
     coords: [-1.51145, 48.63606], // MONT SAINT-MICHEL: Lng is Negative (West) || 48.61778, -1.51033
     title: "Mont Saint-Michel",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863481/1766862822595_shjyzf.png",
     description: "Magical morning tour of the island abbey.",
     icon: "abbey"
   },
   {
-    coords: [-2.02359, 48.65096], // 48.65096, -2.02359
-    title: "Saint-Malo (Intra-Muros)",
+    coords: [-1.20906, 48.35463], //48.35463, -1.20906
+    title: "Château de Fougères",
     imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
-    description: "Old city walls, ou Westen-most point in the trip."
+    description: "Largest and Oldest Medieval Castle in France."
   },
   // {
   //   coords: [-1.67163, 48.10374], // 48.10374, -1.67163
@@ -244,9 +247,15 @@ export const FRANCE_STOPS = [
   //   description: "The heart of the Languedoc Region."
   // }
   {
+    coords: [2.1204, 48.8049],
+    title: "Château de Versailles",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863565/1766863130699_epjbpq.png",
+    description: "The Hall of Mirrors and royal grandeur."
+  },
+  {
     coords: [2.2945, 48.8584],
     title: "Tour Eiffel",
-    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/v1766691914/paris_qggkfe.png",
+    imageId: "https://res.cloudinary.com/dhuaoanpn/image/upload/w_400,c_fill/v1766863557/1766862971817_zzqgj3.png",
     description: "The Iron Lady: first greeting of the trip.",
     icon: "eiffel"
   },
