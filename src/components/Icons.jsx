@@ -6,6 +6,12 @@ export function EiffelIcon({ className = "", title = "Eiffel Tower" }) {
   );
 }
 
+export function StartIcon({ className = "", title = "Nice Airport" }) {
+  return (
+    <img width="75" height="75" src="https://img.icons8.com/doodle/48/finish-flag.png" alt={title} className={className}/>
+  );
+}
+
 export function AqueductIcon({ className = "", title = "Aqueduct" }) {
   return (
     <img width="100" height="100" src="https://img.icons8.com/external-others-pike-picture/50/external-Aqueduct-rome-others-pike-picture.png" alt={title} className={className}/>
@@ -21,6 +27,12 @@ export function PotteryIcon({ className = "", title = "Pottery" }) {
 export function AbbeyIcon({ className = "", title = "Abbey" }) {
   return (
     <img width="75" height="75" src="https://img.icons8.com/doodle/48/national-park.png" alt={title} className={className}/>
+  );
+}
+
+export function CastleIcon({ className = "", title = "Carcassone" }) {
+  return (
+    <img width="75" height="75" src="https://res.cloudinary.com/dhuaoanpn/image/upload/v1766795184/castle_dfjcze.jpg" alt={title} className={className}/>
   );
 }
 
@@ -55,6 +67,8 @@ export default function IconFor({ name, className, title, idx }) {
   if (n === "aqueduct") return withBadge(<AqueductIcon className={className} title={title || "Aqueduct"} />);
   if (n === "pottery") return withBadge(<PotteryIcon className={className} title={title || "Pottery"} />);
   if (n === "abbey") return withBadge(<AbbeyIcon className={className} title={title || "Abbey"} />);
+  if (n === "start") return withBadge(<StartIcon className={className} title={title || "Starting Point"} />);
+  if (n === "castle") return withBadge(<CastleIcon className={className} title={title || "Carcassone"} />);
 
   // treat as URL (photo icon)
   if (/^https?:\/\//.test(name)) {

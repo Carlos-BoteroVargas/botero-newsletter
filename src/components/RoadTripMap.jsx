@@ -120,37 +120,29 @@ export default function RoadTripMap({
             pitch: 50,    // 50 degrees tilt for a 3D look
             bearing: -10  // Slight rotation 
           }}
-          mapStyle="mapbox://styles/mapbox/light-v11" 
+          mapStyle="mapbox://styles/mapbox/outdoors-v12" //light-v11 dark-v11 outdoors-v11 satellite-streets-v11
           mapboxAccessToken={mapboxToken}
         >
           <NavigationControl position="top-right" visualizePitch={true} />
 
           {routeData && (
-            <Source type="geojson" data={routeData}>
-              <Layer type="line" paint={{ 'line-color': '#2563eb', 'line-width': 3 }} />
-            </Source>
+            <>
+              <Source type="geojson" data={routeData}>
+                <Layer type="line" paint={{ 'line-color': '#2563eb', 'line-width': 2 }} />
+              </Source>
+              <Source type="geojson" data={routeData}>
+                <Layer
+                  id="road-single"
+                  type="line"
+                  layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+                  paint={{ 'line-color': '#374151', 'line-width': 8, 'line-blur': 0.6, 'line-opacity': 0.95 }}
+                />
+              </Source>
+            </>
           )}
 
           {stops.map((stop, idx) => (
             <Marker key={idx} longitude={stop.coords[0]} latitude={stop.coords[1]}>
-              {/* <div 
-                className="group relative flex items-center justify-center cursor-pointer"
-                onClick={() => {
-                  mapRef.current.flyTo({ center: stop.coords, zoom: 7 });
-                  setSelectedLocation({ 
-                    longitude: stop.coords[0], 
-                    latitude: stop.coords[1], 
-                    index: idx,
-                    title: stop.title,
-                    img: stop.imageId,
-                    desc: stop.description,
-                  });
-                }} 
-              >
-                <div className="w-8 h-8 bg-orange-400 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-xs font-bold transition-all group-hover:bg-green-700 group-hover:scale-110">
-                  {idx + 1}
-                </div>
-              </div> */}
               <button
                 onClick={() => { mapRef.current.flyTo({ center: stop.coords, zoom: 7.5 }); setSelectedLocation({ 
                     longitude: stop.coords[0], 
@@ -160,7 +152,6 @@ export default function RoadTripMap({
                     img: stop.imageId,
                     desc: stop.description,
                   }); }}
-                // className="min-w-[44px] min-h-[44px] p-0 rounded-full flex items-center justify-center touch-manipulation"
                 className="group min-w-[44px] min-h-[44px] p-0 rounded-full flex items-center justify-center touch-manipulation"
                 aria-label={stop.title}
                 style={{ background: 'transparent', border: 0 }}

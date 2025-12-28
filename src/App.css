@@ -1,42 +1,47 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Import the thinner handwriting font */
+@import url('https://fonts.googleapis.com/css2?family=Waiting+for+the+Sunrise&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+  /*background-color: #f0f0f0; /* Light grey background to make the card pop */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.holiday-card {
+  background-color: #fffdf9; /* Slightly off-white "paper" color */
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Soft shadow */
+  border-radius: 2px;
+  
+  /* Applying the thin font */
+  font-family: 'Waiting for the Sunrise', cursive;
+  font-size: 1.3rem;
+  color: #2c3e50; /* A dark navy/grey "ink" color */
+  line-height: 1.6;
+  
+  /* Slight rotation for a natural feel */
+  transform: rotate(-3deg);
 }
 
-@keyframes logo-spin {
-  from {
+.card-signature {
+  margin-top: 15px;
+  text-align: right;
+  font-size: 1.3rem;
+  font-family: 'Shadows Into Light', cursive;
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 600px) {
+  .holiday-card {
+    font-family: 'tahoma', sans-serif;
+    font-size: 1rem;
     transform: rotate(0deg);
   }
-  to {
-    transform: rotate(360deg);
+  .card-signature {
+    font-size: 1rem;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
