@@ -16,7 +16,7 @@ export default function App() {
   const [showFooter, setShowFooter] = useState(false);
   const audioRef = useRef(new Audio('/tranquil.mp3'));
   
-  const DEFAULT_YEAR = '2026';
+  const DEFAULT_YEAR = '2025';
   const [year, setYear] = useState(DEFAULT_YEAR);
   const [timeline, setTimeline] = useState([]);
   const [stops, setStops] = useState([]);
@@ -196,15 +196,19 @@ export default function App() {
         </motion.div>
       </header>
 
-      {/* Polaroids */}
-      <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-6 mt-10 z-4">
-        <Polaroids />
-      </motion.section>
+      {year !== '2025' &&(
+        <>
+          {/* Polaroids */}
+          <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto px-6 mt-10 z-4">
+            <Polaroids />
+          </motion.section>
 
-      {/* Holiday Card (placed right below the hero) */}
-      <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-6 mt-10 z-4">
-        <HolidayCard cardContent={cardContent} />
-      </motion.section>
+          {/* Holiday Card (placed right below the hero) */}
+          <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-6 mt-10 z-4">
+            <HolidayCard cardContent={cardContent} />
+          </motion.section>
+        </>
+      )}
 
       {/* Not-found / Redirect Banner */}
       {notFoundYear && (

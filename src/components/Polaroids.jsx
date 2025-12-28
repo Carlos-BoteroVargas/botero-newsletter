@@ -12,7 +12,7 @@ const Polaroids = () => {
     {
       id: 2,
       src: "https://res.cloudinary.com/dhuaoanpn/image/upload/c_crop,g_north_west,h_973,w_974/v1766863557/1766862971817_zzqgj3.png",
-      caption: "Summer in Nice & Paris",
+      caption: "Summer: from Nice to Paris",
       rotation: "3deg"
     },
     {

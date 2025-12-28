@@ -28,8 +28,20 @@
 }
 
 .card-signature {
-  margin-top: 40px;
+  margin-top: 15px;
   text-align: right;
   font-size: 1.3rem;
   font-family: 'Shadows Into Light', cursive;
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 600px) {
+  .holiday-card {
+    font-family: 'tahoma', sans-serif;
+    font-size: 1rem;
+    transform: rotate(0deg);
+  }
+  .card-signature {
+    font-size: 1rem;
+  }
 }
