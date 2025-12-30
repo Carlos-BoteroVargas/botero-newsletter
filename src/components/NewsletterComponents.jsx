@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Map as MapIcon, X } from 'lucide-react';
+import { Map as MapIcon } from 'lucide-react';
 import SleepFlowChart from './SleepFlowChart';
 
 export const Shimmer = () => (
@@ -133,7 +133,7 @@ export const TimelineItem = ({ entry, onOpenTrip }) => {
                   style={modalStyles.closeBtn}
                   aria-label="Close flowchart"
                 >
-                  <X size={20} />
+                  X
                 </button>
               </div>
               
