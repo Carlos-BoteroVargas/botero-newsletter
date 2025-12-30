@@ -13,8 +13,8 @@ const HolidayCard = ({cardContent = "Merry Christmas to all!"}) => {
         {paragraphs.map((p, i) => <p key={i} style={{paddingBottom: "10px"}}>{p}</p>)}
 
         <div className="card-signature">
-          <p>With love, The Botero Family</p>
-          <p>Carlos, Elizabeth, Isabel, Elena, Luca, and baby Juliana.</p>
+          <p>With love,</p>
+          <p>Carlos, Elizabeth, Isabel, Elena, Luca, and baby Julianna.</p>
         </div>
       </div>
     </div>
