@@ -1,39 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle, ArrowRight, RotateCcw } from 'lucide-react';
+import { AlertCircle, CheckCircle, ArrowRight, RotateCcw, X } from 'lucide-react';
 
-// Placeholder for the watercolor image. 
-// Replace '/api/placeholder/800/200' with your actual image path in your project.
-const headerImageUrl = 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1767123638/Julianna_fvigmz.jpg'; 
+// Images from your original file
+const HEADER_IMAGE = 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1767123638/Julianna_fvigmz.jpg';
 const REWARD_IMAGE = 'https://res.cloudinary.com/dhuaoanpn/image/upload/v1767124279/Baby-Flowchart_jrjnjk.png';
 
 const SleepFlowchart = () => {
   const [currentStep, setCurrentStep] = useState('start');
   const [rewardOpen, setRewardOpen] = useState(false);
-  const rewardCloseBtnRef = useRef(null);
   const [isMobile, setIsMobile] = useState(true);
+  const rewardCloseBtnRef = useRef(null);
 
-  useEffect(() => {
-    // Detect mobile (tailwind sm breakpoint ~640px)
-    const mq = window.matchMedia('(max-width: 640px)');
-    const update = (e) => setIsMobile(e.matches);
-    setIsMobile(mq.matches);
-    if (mq.addEventListener) mq.addEventListener('change', update);
-    else mq.addListener(update);
-    return () => {
-      if (mq.removeEventListener) mq.removeEventListener('change', update);
-      else mq.removeListener(update);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (rewardOpen && rewardCloseBtnRef.current) rewardCloseBtnRef.current.focus();
-    const onKey = (e) => { if (e.key === 'Escape' && rewardOpen) setRewardOpen(false); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [rewardOpen]);
-
-  // The exact logic transcribed from Isabel's chart
+  // --- LOGIC: Isabel's Original Flow ---
   const flowLogic = {
     start: {
       type: 'question',
@@ -49,7 +28,7 @@ const SleepFlowchart = () => {
     cryingAfterChange: {
       type: 'question',
       text: "Still crying?",
-      yesNext: 'checkHunger', // Isabel's clever loop!
+      yesNext: 'checkHunger',
       noNext: 'finalSnuggle'
     },
     checkHunger: {
@@ -73,119 +52,285 @@ const SleepFlowchart = () => {
       type: 'question',
       text: "Is the Swaddle too tight?",
       yesNext: 'rewrap',
-      // Isabel's chart implies if 'no', the current state is fine, leading to sleep/snuggle
-      noNext: 'finalSnuggle' 
+      noNext: 'finalSnuggle'
     },
-    // Terminal Result States
-    finalSnuggle: { type: 'result', text: "Give passy and snuggel" },
+    // Results
+    finalSnuggle: { type: 'result', text: "Give passy and snuggle" },
     shush: { type: 'result', text: "Give passy + gently shush" },
     rewrap: { type: 'result', text: "Rewrap Swaddle" },
   };
 
   const stepData = flowLogic[currentStep];
 
-  const handleNext = (nextStep) => {
-    setCurrentStep(nextStep);
-  };
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    setIsMobile(mq.matches);
+    const update = (e) => setIsMobile(e.matches);
+    if (mq.addEventListener) mq.addEventListener('change', update);
+    return () => mq.removeEventListener && mq.removeEventListener('change', update);
+  }, []);
 
-  const restart = () => {
-    setCurrentStep('start');
+  // --- STYLES ---
+  const s = {
+    container: {
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      backgroundColor: '#fff',
+      borderRadius: '12px',
+      overflow: 'hidden',
+      border: '1px solid #e9d5ff', // Purple 200
+      maxWidth: '600px',
+      margin: '0 auto',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    },
+    header: {
+      height: '200px',
+      position: 'relative',
+      backgroundColor: '#faf5ff',
+    },
+    headerImg: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      opacity: 0.9,
+    },
+    headerTitleBox: {
+      position: 'absolute',
+      bottom: 0, left: 0, right: 0,
+      background: 'linear-gradient(to top, rgba(255,255,255,0.9), transparent)',
+      padding: '20px 10px',
+      textAlign: 'center',
+    },
+    headerTitle: {
+      color: '#6b21a8', // Purple 800
+      fontSize: '24px',
+      fontWeight: 'bold',
+      fontFamily: '"Comic Sans MS", "Chalkboard SE", sans-serif',
+      margin: 0,
+      textShadow: '0 1px 2px rgba(255,255,255,1)',
+    },
+    body: {
+      padding: '32px 24px',
+      textAlign: 'center',
+    },
+    iconWrapper: {
+      marginBottom: '16px',
+      display: 'flex', justifyContent: 'center'
+    },
+    questionText: {
+      fontSize: '20px',
+      fontWeight: '600',
+      color: '#1f2937', // Gray 800
+      marginBottom: '24px',
+    },
+    btnYes: {
+      backgroundColor: '#22c55e', // Green 500
+      color: 'white',
+      border: 'none',
+      padding: '12px 32px',
+      borderRadius: '50px',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      margin: '0 8px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    },
+    btnNo: {
+      backgroundColor: '#ef4444', // Red 500
+      color: 'white',
+      border: 'none',
+      padding: '12px 32px',
+      borderRadius: '50px',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      margin: '0 8px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    },
+    btnAction: {
+      backgroundColor: '#3b82f6', // Blue 500
+      color: 'white',
+      border: 'none',
+      padding: '12px 32px',
+      borderRadius: '50px',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    },
+    resultBox: {
+      backgroundColor: '#faf5ff', // Purple 50
+      border: '2px solid #e9d5ff',
+      borderRadius: '12px',
+      padding: '24px',
+      marginBottom: '20px',
+    },
+    resultText: {
+      fontFamily: '"Comic Sans MS", cursive, sans-serif',
+      color: '#581c87', // Purple 900
+      fontSize: '22px',
+      fontWeight: 'bold',
+      margin: '10px 0 5px 0',
+    },
+    claimBtn: {
+      backgroundColor: 'transparent',
+      border: '2px solid #f59e0b', // Amber 500
+      color: '#b45309', // Amber 700
+      padding: '8px 16px',
+      borderRadius: '50px',
+      fontWeight: 'bold',
+      marginTop: '10px',
+      cursor: 'pointer',
+    },
+    restartBtn: {
+      background: 'none',
+      border: 'none',
+      color: '#9333ea', // Purple 600
+      fontWeight: '600',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '8px',
+      marginTop: '20px',
+      cursor: 'pointer',
+      fontSize: '14px',
+    },
+    // Reward Modal Styles
+    rewardOverlay: {
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      zIndex: 9999,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '16px',
+    },
+    rewardModal: {
+      backgroundColor: 'white',
+      borderRadius: '12px',
+      padding: '16px',
+      width: '100%',
+      maxWidth: '600px',
+      maxHeight: '90vh',
+      overflowY: 'auto',
+      position: 'relative',
+    },
+    rewardHeader: {
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      marginBottom: '12px',
+    },
+    closeRewardBtn: {
+      background: '#f3f4f6', border: 'none', borderRadius: '4px',
+      width: '32px', height: '32px',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      cursor: 'pointer', color: '#333', fontWeight: 'bold'
+    }
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-8 border border-purple-100">
-      {/* Header Image Header */}
-      <div className="relative h-48 bg-purple-50 overflow-hidden">
-         <img 
-           src={headerImageUrl} 
-           alt="Julianna Watercolor Portraits" 
-           className="w-full h-full object-cover opacity-90"
-         />
-         <div className="absolute inset-0 bg-gradient-to-t from-white/60 to-transparent"></div>
-         <h2 className="absolute bottom-4 left-0 right-0 text-center text-2xl font-bold text-purple-800 drop-shadow-md" style={{fontFamily: 'Comic Sans MS, cursive'}}>
-            Isabel's Guide: Getting Baby to Sleep
-         </h2>
+    <div style={s.container}>
+      {/* Header */}
+      <div style={s.header}>
+        <img src={HEADER_IMAGE} alt="Julianna" style={s.headerImg} />
+        <div style={s.headerTitleBox}>
+          <h2 style={s.headerTitle}>Isabel's Guide: Getting Baby to Sleep</h2>
+        </div>
       </div>
 
-      <div className="p-8 text-center">
-        {/* Render based on step type */}
+      <div style={s.body}>
+        {/* QUESTION */}
         {stepData.type === 'question' && (
           <div className="animate-fade-in-up">
-            <div className="mb-6">
-              <AlertCircle className="mx-auto h-12 w-12 text-amber-500 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800">{stepData.text}</h3>
+            <div style={s.iconWrapper}>
+              <AlertCircle size={48} color="#f59e0b" />
             </div>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => handleNext(stepData.yesNext)}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full transition-colors duration-200 flex items-center"
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => handleNext(stepData.noNext)}
-                className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-6 rounded-full transition-colors duration-200 flex items-center"
-              >
-                No
-              </button>
+            <h3 style={s.questionText}>{stepData.text}</h3>
+            <div>
+              <button style={s.btnYes} onClick={() => setCurrentStep(stepData.yesNext)}>Yes</button>
+              <button style={s.btnNo} onClick={() => setCurrentStep(stepData.noNext)}>No</button>
             </div>
           </div>
         )}
 
+        {/* ACTION */}
         {stepData.type === 'action' && (
           <div className="animate-fade-in-up">
-            <div className="mb-6">
-              <ArrowRight className="mx-auto h-12 w-12 text-blue-400 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800">{stepData.text}</h3>
+             <div style={s.iconWrapper}>
+              <ArrowRight size={48} color="#60a5fa" />
             </div>
-            <button
-                onClick={() => handleNext(stepData.next)}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full transition-colors duration-200"
-              >
-                Okay, done. What next?
-              </button>
+            <h3 style={s.questionText}>{stepData.text}</h3>
+            <button style={s.btnAction} onClick={() => setCurrentStep(stepData.next)}>
+              Okay, done. What next?
+            </button>
           </div>
         )}
 
+        {/* RESULT */}
         {stepData.type === 'result' && (
-          <div className="animate-fade-in-up bg-purple-50 p-6 rounded-lg border-2 border-purple-200">
-            <div className="mb-6">
-              <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-              <h3 className="text-2xl font-bold text-purple-900" style={{fontFamily: 'Comic Sans MS, cursive'}}>{stepData.text}</h3>
-              <p className="text-purple-600 mt-2">Sweet dreams, Julianna!</p>
+          <div className="animate-fade-in-up">
+            <div style={s.resultBox}>
+               <div style={s.iconWrapper}>
+                <CheckCircle size={56} color="#22c55e" />
+              </div>
+              <h3 style={s.resultText}>{stepData.text}</h3>
+              <p style={{ color: '#9333ea', margin: 0 }}>Sweet dreams, Julianna!</p>
             </div>
-            <div className="flex flex-col items-center gap-3">
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
               {isMobile ? (
-                <button onClick={() => isMobile && setRewardOpen(true)} className="mt-2 border border-amber-300 text-amber-800 font-semibold py-2 px-4 rounded-full bg-transparent hover:bg-amber-50">Claim Reward</button>
+                <button style={s.claimBtn} onClick={() => setRewardOpen(true)}>
+                  Claim Reward
+                </button>
               ) : (
-                <p className="text-sm text-stone-500 mt-2">Reward available on mobile only</p>
+                <p style={{ fontSize: '12px', color: '#78716c' }}>Reward available on mobile only</p>
               )}
-              <button
-                onClick={restart}
-                className="text-purple-500 hover:text-purple-700 font-semibold flex items-center"
-              >
-                <RotateCcw className="mr-2 h-4 w-4" /> Start Over
+              
+              <button style={s.restartBtn} onClick={() => setCurrentStep('start')}>
+                <RotateCcw size={16} /> Start Over
               </button>
             </div>
           </div>
-        )} 
+        )}
       </div>
 
+      {/* REWARD MODAL */}
       <AnimatePresence>
         {rewardOpen && isMobile && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/50" onClick={() => setRewardOpen(false)} />
-            <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 10, opacity: 0 }} className="relative z-10 bg-white rounded-lg p-4 max-w-3xl w-full mx-4 shadow-lg">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold">Your Reward: Save the Flowchart</h4>
-                <button ref={rewardCloseBtnRef} onClick={() => setRewardOpen(false)} className="p-2 rounded hover:bg-stone-100 text-stone-300 text-lg font-bold" aria-label="Close reward">X</button>
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} 
+            style={s.rewardOverlay}
+          >
+            <motion.div 
+              initial={{ y: 20 }} animate={{ y: 0 }}
+              style={s.rewardModal}
+            >
+              <div style={s.rewardHeader}>
+                <h4 style={{ margin: 0, fontWeight: 'bold' }}>Save the Flowchart</h4>
+                <button 
+                  ref={rewardCloseBtnRef} 
+                  onClick={() => setRewardOpen(false)} 
+                  style={s.closeRewardBtn}
+                  aria-label="Close"
+                >
+                  <X size={20} />
+                </button>
               </div>
-              <div className="overflow-auto">
-                <img src={REWARD_IMAGE} alt="Baby Flowchart Reward" className="w-full h-auto rounded" />
+              
+              <div style={{ overflow: 'hidden', borderRadius: '8px' }}>
+                <img src={REWARD_IMAGE} alt="Reward" style={{ width: '100%', display: 'block' }} />
               </div>
-              <div className="mt-3 flex justify-end gap-3">
-                <a href={REWARD_IMAGE} download className="border border-stone-300 text-stone-900 px-4 py-2 rounded bg-transparent hover:bg-stone-50">Download</a>
-                <button onClick={() => setRewardOpen(false)} className="px-4 py-2 rounded border border-stone-300 text-stone-300 bg-transparent hover:bg-stone-50">Close</button>
+              
+              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                <a 
+                  href={REWARD_IMAGE} 
+                  download 
+                  style={{ textDecoration: 'none', color: '#1f2937', padding: '8px 16px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '14px' }}
+                >
+                  Download
+                </a>
+                <button 
+                  onClick={() => setRewardOpen(false)} 
+                  style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' }}
+                >
+                  Close
+                </button>
               </div>
             </motion.div>
           </motion.div>
