@@ -120,10 +120,40 @@ export default function RoadTripMap({
             pitch: 50,    // 50 degrees tilt for a 3D look
             bearing: -10  // Slight rotation 
           }}
-          mapStyle="mapbox://styles/mapbox/outdoors-v12" //light-v11 dark-v11 outdoors-v11 satellite-streets-v11
+          mapStyle="mapbox://styles/mapbox/light-v10" //light-v11 dark-v11 outdoors-v11 satellite-streets-v11
           mapboxAccessToken={mapboxToken}
         >
           <NavigationControl position="top-right" visualizePitch={true} />
+
+          {title.includes("France") && (
+            <>  
+              {/* 1. FRANCE OVERLAY (Rendered First = Bottom Layer) */}
+              <Source id="france-boundary" type="vector" url="mapbox://mapbox.country-boundaries-v1">
+                <Layer
+                  id="france-fill"
+                  type="fill"
+                  source-layer="country_boundaries"
+                  // Filter for France (ISO code 'FR')
+                  filter={['==', ['get', 'iso_3166_1_alpha_3'], 'FRA']}
+                  paint={{
+                    'fill-color': '#fef3c7', // Warm stone/paper color
+                    'fill-opacity': 0.7
+                  }}
+                />
+                <Layer
+                  id="france-outline"
+                  type="line"
+                  source-layer="country_boundaries"
+                  filter={['==', ['get', 'iso_3166_1_alpha_3'], 'FRA']}
+                  paint={{
+                    'line-color': '#d97706', // '#d97706',
+                    'line-width': 1,
+                    // 'line-dasharray': [2, 1]
+                  }}
+                />
+              </Source>
+            </>
+          )}
 
           {routeData && (
             <>
