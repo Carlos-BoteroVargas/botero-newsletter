@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Volume2, VolumeX, Moon } from 'lucide-react'; // Added Moon icon
+import { Volume2, VolumeX } from 'lucide-react';
 import Papa from 'papaparse';
-
-// Components
 import RoadTripMap from './components/RoadTripMap';
 import { ImageWithLoading, TimelineItem } from './components/NewsletterComponents';
 import HolidayCard from './components/HolidayCard';
 import Polaroids from './components/Polaroids';
-import SleepFlowchart from './components/SleepFlowChart'; // IMPORT THE CHART
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const GOOGLE_SHEET_CSV_URL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || '';
@@ -17,10 +14,6 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [showFooter, setShowFooter] = useState(false);
-  
-  // State for Sleep Flowchart Modal
-  const [showSleepChart, setShowSleepChart] = useState(false);
-
   const audioRef = useRef(new Audio('/tranquil.mp3'));
   
   const DEFAULT_YEAR = '2025';
@@ -28,11 +21,13 @@ export default function App() {
   const [timeline, setTimeline] = useState([]);
   const [stops, setStops] = useState([]);
   const [mapTitle, setMapTitle] = useState('Road Trip');
+
   const [cardContent, setCardContent] = useState('Merry Christmas to all, and a happy New Year!');
+
+  // 404 / redirect state
   const [notFoundYear, setNotFoundYear] = useState(null);
   const [redirectCountdown, setRedirectCountdown] = useState(0);
   const redirectTimerRef = useRef(null);
-  
   let loadedNewsMessage = '';
 
   useEffect(() => {
@@ -43,17 +38,32 @@ export default function App() {
       let loadedStops = [];
 
       try {
+        // 1. Primary logic for 2026: Try Google Sheets first
         if (yr === '2026') {
           try {
             const response = await fetch(GOOGLE_SHEET_CSV_URL);
-            if (!response.ok) throw new Error("Sheet fetch failed");
             
+            if (!response.ok) throw new Error("Sheet fetch failed");
+
             const contentType = response.headers.get('content-type') || '';
-            if (contentType.includes('text/html')) throw new Error('Spreadsheet returned HTML');
+            if (contentType.includes('text/html')) {
+              const html = await response.text();
+              console.warn('Spreadsheet URL returned HTML — likely an invalid URL or missing VITE_ prefix. Response snippet:', html.slice(0, 400));
+              throw new Error('Spreadsheet returned HTML instead of CSV');
+            }
             
             const csvText = await response.text();
-            const result = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-            
+            const result = Papa.parse(csvText, { 
+              header: true, 
+              skipEmptyLines: true 
+            });
+
+            if (result.errors && result.errors.length) {
+              console.warn('Papa.parse errors:', result.errors);
+              // optionally: throw new Error('CSV parse errors');
+            }            
+
+            // Map sheet columns to component props
             loadedTimeline = result.data.slice().reverse().map(row => ({
               month: row.month,
               title: row.title,
@@ -63,35 +73,54 @@ export default function App() {
               isPortrait: row['Image Orientation (isPortrait)']?.toUpperCase() === 'TRUE'
             }));
 
-            // Load stops for 2026 map
+            if (loadedTimeline.length === 0) throw new Error("Sheet is empty");
+
+            // Also load stops from the local 2026 module so maps have data (FRANCE_STOPS / PARIS_STOPS)
             try {
               const stopsModule = await import(`./data/${yr}.js`);
               const stopsKey = Object.keys(stopsModule).find(k => k.endsWith('_STOPS'));
               loadedStops = stopsModule[stopsKey] || [];
+              // grab NEWS_MESSAGE_YYYY (or generic NEWS_MESSAGE) if present
               loadedNewsMessage = stopsModule[`NEWS_MESSAGE_${yr}`] || stopsModule.NEWS_MESSAGE || loadedNewsMessage;
-            } catch (e) { console.warn("Local 2026 data missing"); }
-          } catch (e) { console.warn("Sheet failed, using fallback"); }
+              if (loadedStops.length) console.log(`Loaded ${yr} stops from local data file for map.`);
+            } catch (stopsErr) {
+              console.warn(`Failed to load ${yr} stops from local file`, stopsErr);
+            }
+          } catch (sheetErr) {
+            console.warn("Spreadsheet load failed, falling back to local 2026.js", sheetErr);
+            // Fall through to local file loading logic
+          }
         }
 
-        // Fallback or Standard Load
+        // 2. Local File Loading (Fallback for 2026 or primary for other years)
         if (loadedTimeline.length === 0) {
           const module = await import(`./data/${yr}.js`);
+          
+          // Use specific TIMELINE_YYYY key or generic TIMELINE
           const timelineKey = `TIMELINE_${yr}`;
           loadedTimeline = module[timelineKey] || module.TIMELINE || [];
+          
           const stopsKey = Object.keys(module).find(k => k.endsWith('_STOPS'));
           loadedStops = module[stopsKey] || [];
+          // grab NEWS_MESSAGE_YYYY (or generic NEWS_MESSAGE) if present
           loadedNewsMessage = module[`NEWS_MESSAGE_${yr}`] || module.NEWS_MESSAGE || loadedNewsMessage;
+          console.log(`Loaded ${yr} from local data file.`);
         }
 
         if (!isMounted) return;
+
         setYear(yr);
         setTimeline(loadedTimeline);
         setStops(loadedStops);
         setCardContent(loadedNewsMessage || '');
         document.title = `Botero Family - ${yr}`;
         if (clearNotFound) setNotFoundYear(null);
+
       } catch (err) {
-        if (yr !== DEFAULT_YEAR) handleRedirect(yr);
+        console.warn(`No data for year ${yr}, falling back to ${DEFAULT_YEAR}`, err);
+        if (yr !== DEFAULT_YEAR) {
+          handleRedirect(yr);
+        }
       }
     };
 
@@ -100,6 +129,7 @@ export default function App() {
       setNotFoundYear(yr);
       let secs = 7;
       setRedirectCountdown(secs);
+
       loadYear(DEFAULT_YEAR, { clearNotFound: false });
 
       redirectTimerRef.current = setInterval(() => {
@@ -119,52 +149,35 @@ export default function App() {
     };
 
     const handlePop = () => loadYear(getYearFromPath());
+
     loadYear(getYearFromPath());
     window.addEventListener('popstate', handlePop);
-    
     return () => { 
       isMounted = false; 
-      window.removeEventListener('popstate', handlePop);
+      window.removeEventListener('popstate', handlePop); 
       if (redirectTimerRef.current) clearInterval(redirectTimerRef.current);
     };
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setShowFooter(window.scrollY > window.innerHeight * 0.8);
+    const handleScroll = () => {
+      setShowFooter(window.scrollY > window.innerHeight * 0.8);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className="bg-stone-50 min-h-screen text-stone-900 pb-24 font-sans">
-      
-      {/* --- SLEEP CHART MODAL --- */}
-      <SleepFlowchart 
-        isOpen={showSleepChart} 
-        onClose={() => setShowSleepChart(false)} 
-      />
-
-      {/* --- FLOATING CONTROLS --- */}
-      
-      {/* Audio Control (Bottom Right) */}
+    <div className="bg-stone-50 min-h-screen text-stone-900 pb-24">
+      {/* Audio Control */}
       <button 
         onClick={() => { setIsPlaying(!isPlaying); isPlaying ? audioRef.current.pause() : audioRef.current.play(); }}
-        className="fixed bottom-6 right-6 z-50 p-4 bg-white rounded-full shadow-xl border border-stone-200 hover:bg-stone-50 transition"
-        title="Toggle Music"
+        className="fixed bottom-23 right-6 z-50 p-4 bg-white rounded-full shadow-xl border border-stone-200"
       >
         {isPlaying ? <Volume2 className="text-blue-600" /> : <VolumeX className="text-stone-400" />}
       </button>
 
-      {/* Sleep Guide Control (Bottom Left) */}
-      <button 
-        onClick={() => setShowSleepChart(true)}
-        className="fixed bottom-6 left-6 z-50 p-4 bg-indigo-600 rounded-full shadow-xl border border-indigo-700 hover:bg-indigo-700 transition text-white"
-        title="Isabel's Sleep Guide"
-      >
-        <Moon size={24} fill="currentColor" />
-      </button>
-
-      {/* Hero Section */}
+      {/* 1. Postcard Hero */}
       <header className="h-screen w-full relative flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <ImageWithLoading src={`/images/hero${year}.png`} alt={`Botero Family Hero ${year}`} className="brightness-75" />
@@ -176,32 +189,37 @@ export default function App() {
             <p className="tracking-[0.3em] uppercase text-stone-500 text-sm">
               {`The Botero Family - ${year}`}
             </p>
-            <p className="tracking-[0.3em] text-stone-400 mt-6 text-xs">(scroll down to see the news!)</p>
+            <p className="tracking-[0.3em] text-stone-400 mt-6 text-xs">
+              (scroll down to see the news!)
+            </p>
           </div>
         </motion.div>
       </header>
 
       {year !== '2025' &&(
         <>
+          {/* Polaroids */}
           <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto px-6 mt-10 z-4">
             <Polaroids />
           </motion.section>
+
+          {/* Holiday Card (placed right below the hero) */}
           <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto px-6 mt-10 z-4">
             <HolidayCard cardContent={cardContent} />
           </motion.section>
         </>
       )}
 
-      {/* Redirect Banner */}
+      {/* Not-found / Redirect Banner */}
       {notFoundYear && (
         <div className="fixed inset-0 z-[70] flex items-start justify-center pt-24 px-4 pointer-events-none">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-r from-red-50 via-green-50 to-yellow-50 border-2 border-red-200 p-4 rounded-xl shadow-2xl max-w-xl w-full pointer-events-auto">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="text-3xl">🎄</div>
+                <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="text-3xl">🎄</motion.div>
                 <div>
                   <h3 className="font-bold text-stone-800">Year {notFoundYear} not found</h3>
-                  <p className="text-sm text-stone-600 mt-1">Redirecting to {DEFAULT_YEAR}...</p>
+                  <p className="text-sm text-stone-600 mt-1">Redirecting to <span className="font-semibold text-stone-800">{DEFAULT_YEAR}</span> in <span className="font-mono">{redirectCountdown}s</span></p>
                 </div>
               </div>
               <button onClick={() => {
@@ -214,7 +232,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Timeline */}
+      {/* 2. Chronological Timeline */}
       <main className="max-w-4xl mx-auto py-24 px-6 space-y-48">
         {timeline.map((entry, i) => (
           <TimelineItem 
@@ -225,7 +243,7 @@ export default function App() {
         ))}
       </main>
 
-      {/* Road Trip Map */}
+      {/* 3. The Reusable Map Component */}
       <AnimatePresence>
         {showMap && (
           <RoadTripMap 
@@ -238,7 +256,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Footer */}
+      {/* 4. Footer Overlay */}
       <AnimatePresence>
         {showFooter && (
           <motion.footer initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
