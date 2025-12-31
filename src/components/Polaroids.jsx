@@ -5,7 +5,8 @@ const Polaroids = () => {
   const photos = [
     {
       id: 1,
-      src: "https://res.cloudinary.com/dhuaoanpn/image/upload/f_auto,q_auto,c_fill,g_center,w_600,h_600/v1767123638/Julianna_fvigmz.jpg", // f_auto,q_auto,c_fill,g_center,w_600,h_600/
+      src: "https://res.cloudinary.com/dhuaoanpn/image/upload/f_auto,q_auto,c_fill,g_center,w_600,h_600/v1767200064/PXL_20251231_161519330_nczcca.jpg", // f_auto,q_auto,c_fill,g_center,w_600,h_600/
+      // v1767123638/Julianna_fvigmz.jpg
       caption: "Our baby girl's 1st year",
       rotation: "-2deg"
     },
