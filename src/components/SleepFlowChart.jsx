@@ -217,7 +217,7 @@ const SleepFlowchart = () => {
       marginBottom: '12px',
     },
     closeRewardBtn: {
-      background: '#f3f4f6', border: 'none', borderRadius: '4px',
+      background: '#f3f4f6', border: '1px solid #000', borderRadius: '50%',
       width: '32px', height: '32px',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       cursor: 'pointer', color: '#333', fontWeight: 'bold'
@@ -302,14 +302,15 @@ const SleepFlowchart = () => {
               style={s.rewardModal}
             >
               <div style={s.rewardHeader}>
-                <h4 style={{ margin: 0, fontWeight: 'bold' }}>Save the Flowchart</h4>
+                {/* <h4 style={{ margin: 0, fontWeight: 'bold' }}>Save the Flowchart</h4> */}
+                <div>{" "}</div>
                 <button 
                   ref={rewardCloseBtnRef} 
                   onClick={() => setRewardOpen(false)} 
                   style={s.closeRewardBtn}
                   aria-label="Close"
                 >
-                  <X size={20} />
+                  <div className='text-gray-800'>X</div>
                 </button>
               </div>
               

@@ -97,7 +97,7 @@ export const TimelineItem = ({ entry, onOpenTrip }) => {
         {entry.type === 'flowchart' && (
           <button 
             onClick={() => setShowFlow(true)} 
-            className="appearance-none bg-purple-600 text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-purple-700 active:scale-95 transition-all shadow-lg"
+            className="appearance-none !bg-stone-900 text-white px-8 py-4 rounded-full flex items-center gap-2 hover:bg-blue-700 active:scale-95 transition-all shadow-lg"
           >
             <span className="font-semibold">Open Isabel's Guide</span>
           </button>
@@ -133,7 +133,7 @@ export const TimelineItem = ({ entry, onOpenTrip }) => {
                   style={modalStyles.closeBtn}
                   aria-label="Close flowchart"
                 >
-                  X
+                  <div className='text-gray-800'>X</div>
                 </button>
               </div>
               
