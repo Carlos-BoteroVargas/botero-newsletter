@@ -176,7 +176,7 @@ export default function RoadTripMap({
               <button
                 onClick={() => { mapRef.current.flyTo({ center: stop.coords, zoom: 7.5 }); setSelectedLocation({ 
                     longitude: stop.coords[0], 
-                    latitude: stop.coords[1], 
+                    latitude: stop.coords[1] + 2e-5, // Slight offset to avoid marker overlap
                     index: idx,
                     title: stop.title,
                     img: stop.imageId,
@@ -200,9 +200,9 @@ export default function RoadTripMap({
               anchor="bottom"
               onClose={() => setSelectedLocation(null)}
               closeOnClick={false}
-              maxWidth="350px"
+              maxWidth="450px"
             >
-              <div className="flex items-center gap-1 max-w-[16rem]">
+              <div className="flex items-center gap-1 max-w-[50rem]">
                 {/* Left Button */}
                 {selectedLocation.index !== 0 && (
                   <button 
