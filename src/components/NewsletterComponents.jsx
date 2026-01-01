@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Map as MapIcon } from 'lucide-react';
+import { GuideIcon } from './Icons';
 import SleepFlowChart from './SleepFlowChart';
 
 export const Shimmer = () => (
@@ -95,10 +97,14 @@ export const TimelineItem = ({ entry, onOpenTrip }) => {
         )}
 
         {entry.type === 'flowchart' && (
-          <button 
-            onClick={() => setShowFlow(true)} 
-            className="appearance-none !bg-stone-900 text-white px-8 py-4 rounded-full flex items-center gap-2 hover:bg-blue-700 active:scale-95 transition-all shadow-lg"
+          <button
+            onClick={() => setShowFlow(true)}
+            aria-haspopup="dialog"
+            aria-expanded={showFlow}
+            className="group appearance-none px-6 py-3 rounded-full flex items-center gap-3 bg-linear-to-r from-pink-500 via-amber-400 to-yellow-400 text-black font-semibold shadow-2xl hover:scale-105 active:scale-95 transition-transform transform-gpu focus:outline-none"
           >
+            <GuideIcon className="w-5 h-5 text-white transform transition-transform " /> 
+            {/* group-hover:-translate-y-1 group-hover:rotate-6 */}
             <span className="font-semibold">Open Isabel's Guide</span>
           </button>
         )} 

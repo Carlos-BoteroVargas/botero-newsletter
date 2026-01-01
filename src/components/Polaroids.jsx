@@ -12,16 +12,17 @@ const Polaroids = () => {
     },
     {
       id: 2,
-      src: "https://res.cloudinary.com/dhuaoanpn/image/upload/c_crop,g_north_west,h_973,w_974/v1766863557/1766862971817_zzqgj3.png",
+      src: 'https://res.cloudinary.com/dhuaoanpn/image/upload/f_auto,q_auto,c_fill,g_center,w_600,h_600/v1766758726/1766758660141_tk1afq.png',
+      // src: "https://res.cloudinary.com/dhuaoanpn/image/upload/f_auto,q_auto,c_fill,g_center,w_600,h_600/v1767297225/MAP_b0wftw.png",
       caption: "Summer: from Nice to Paris",
       rotation: "3deg"
     },
-    {
-      id: 3,
-      src: "https://res.cloudinary.com/dhuaoanpn/image/upload/f_auto,q_auto,c_fill,g_center,w_600,h_600/v1766519623/March2_sdjyga.jpg",
-      caption: "26.2 miles in October",
-      rotation: "-1deg"
-    }
+    // {
+    //   id: 3,
+    //   src: "https://res.cloudinary.com/dhuaoanpn/image/upload/f_auto,q_auto,c_fill,g_center,w_600,h_600/v1766519623/March2_sdjyga.jpg",
+    //   caption: "26.2 miles in October",
+    //   rotation: "-1deg"
+    // }
   ];
 
   return (

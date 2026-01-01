@@ -36,6 +36,33 @@ export function CastleIcon({ className = "", title = "Carcassone" }) {
   );
 }
 
+export function GuideIcon({ className = "", title = "Isabel's Guide" }) {
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} role="img" aria-label={title}>
+      {/* Top node */}
+      <circle cx="10" cy="2" r="1.6" stroke="currentColor" strokeWidth="1.2" fill="none" />
+
+      {/* Middle process box */}
+      <rect x="7.5" y="9" width="9" height="4" rx="1" stroke="currentColor" strokeWidth="1.2" fill="none" />
+
+      {/* Bottom node */}
+      <circle cx="12" cy="19" r="1.6" stroke="currentColor" strokeWidth="1.2" fill="none" />
+
+      {/* Connectors */}
+      <path d="M10 4v4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M12 13v5.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+
+      {/* Decision branches (little arrows) */}
+      <path d="M16 11.5l1-1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M8 11.5l-1-1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+
+      {/* Small accents to make it whimsical */}
+      <circle cx="20" cy="3" r="0.6" fill="currentColor" />
+      <circle cx="5" cy="18" r="0.5" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function DefaultPin({ index, small = false }) {
   const sizeClasses = small ? "w-5 h-5 text-[10px]" : "w-8 h-8 text-xs";
   return (
@@ -78,24 +105,3 @@ export default function IconFor({ name, className, title, idx }) {
   return <DefaultPin index={index} className={className} />;
 }
 
-
-// export default function IconFor({ name, className, title, idx }) {
-//   const index = idx !== undefined ? idx : null;
-//   if (!name) return <DefaultPin index={index} />;
-//   const n = name.toLowerCase();
-//   if (n === "eiffel") return <EiffelIcon className={className} title={title || "Eiffel Tower"} />;
-//   if (n === "aqueduct") return <AqueductIcon className={className} title={title || "Aqueduct"} />;
-//   if (n === "pottery") return <PotteryIcon className={className} title={title || "Pottery"} />;
-//   if (n === "abbey") return <AbbeyIcon className={className} title={title || "Abbey"} />;
-//   // treat as URL
-//   if (/^https?:\/\//.test(name)) return <img src={name} alt={title || "icon"} className={className} />;
-//   return <DefaultPin index={index} />;
-// }
-
-// export function DefaultPin({ index }) {
-//   return (
-//     <div className="w-8 h-8 bg-orange-400 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-xs font-bold transition-all group-hover:bg-green-700 group-hover:scale-110">
-//       {index + 1}
-//     </div>
-//   );
-// }
