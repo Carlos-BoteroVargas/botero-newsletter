@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 import Papa from 'papaparse';
@@ -14,7 +15,8 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [showFooter, setShowFooter] = useState(false);
-  const audioRef = useRef(new Audio('/tranquil.mp3'));
+  const audioRef = useRef(null);
+  const isPlayingRef = useRef(isPlaying);
   
   const DEFAULT_YEAR = '2025';
   const [year, setYear] = useState(DEFAULT_YEAR);
@@ -28,10 +30,10 @@ export default function App() {
   const [notFoundYear, setNotFoundYear] = useState(null);
   const [redirectCountdown, setRedirectCountdown] = useState(0);
   const redirectTimerRef = useRef(null);
-  let loadedNewsMessage = '';
 
   useEffect(() => {
     let isMounted = true;
+    let loadedNewsMessage = ''; 
 
     const loadYear = async (yr, { clearNotFound = true } = {}) => {
       let loadedTimeline = [];
@@ -167,11 +169,59 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Create / update audio element when `year` changes. Falls back to /tranquil.mp3 if absent.
+  useEffect(() => {
+    // cleanup previous audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
+    }
+
+    const audio = new Audio(`/${year}.mp3`);
+    audio.preload = 'auto';
+    audio.onended = () => setIsPlaying(false);
+    audio.onerror = () => {
+      // if year-specific file missing, fall back to default tranquil.mp3
+      if (!audio.src.endsWith('/tranquil.mp3')) {
+        // set fallback; browsers will attempt to load it
+        audio.src = '/tranquil.mp3';
+      }
+    };
+
+    audioRef.current = audio;
+
+    // If already playing, start the new track
+    if (isPlayingRef.current) {
+      audio.play().catch(() => setIsPlaying(false));
+    }
+
+    return () => {
+      if (audioRef.current === audio) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+        audioRef.current = null;
+      }
+    };
+  }, [year]);
+
+  // React to play/pause toggles
+  useEffect(() => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.play().catch(() => setIsPlaying(false));
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isPlaying]);
+
+  // Keep a ref copy of isPlaying so it can be checked inside other effects without needing to add it as a dependency
+  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
+
   return (
     <div className="bg-stone-50 min-h-screen text-stone-900 pb-24">
       {/* Audio Control */}
       <button 
-        onClick={() => { setIsPlaying(!isPlaying); isPlaying ? audioRef.current.pause() : audioRef.current.play(); }}
+        onClick={() => setIsPlaying(prev => !prev)}
         className="fixed bottom-23 right-6 z-50 p-4 bg-white rounded-full shadow-xl border border-stone-200"
       >
         {isPlaying ? <Volume2 className="text-blue-600" /> : <VolumeX className="text-stone-400" />}
@@ -212,8 +262,8 @@ export default function App() {
 
       {/* Not-found / Redirect Banner */}
       {notFoundYear && (
-        <div className="fixed inset-0 z-[70] flex items-start justify-center pt-24 px-4 pointer-events-none">
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-r from-red-50 via-green-50 to-yellow-50 border-2 border-red-200 p-4 rounded-xl shadow-2xl max-w-xl w-full pointer-events-auto">
+        <div className="fixed inset-0 z-70 flex items-start justify-center pt-24 px-4 pointer-events-none">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-linear-to-r from-red-50 via-green-50 to-yellow-50 border-2 border-red-200 p-4 rounded-xl shadow-2xl max-w-xl w-full pointer-events-auto">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="text-3xl">🎄</motion.div>
