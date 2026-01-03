@@ -5,11 +5,12 @@ import { useInView } from 'react-intersection-observer';
 import { Map as MapIcon } from 'lucide-react';
 import { GuideIcon } from './Icons';
 import SleepFlowChart from './SleepFlowChart';
+import TimelineVideo from './TimelineVideo';
 
 export const Shimmer = () => (
   <div className="w-full h-full bg-stone-200 relative overflow-hidden">
     <motion.div 
-      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+      className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent"
       animate={{ x: ['-100%', '100%'] }}
       transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
     />
@@ -88,10 +89,12 @@ export const TimelineItem = ({ entry, onOpenTrip }) => {
       <div className="flex-1">
         <h3 className="text-blue-600 font-bold mb-2 tracking-tighter uppercase text-sm">{entry.month}</h3>
         <h2 className="text-4xl font-serif mb-6">{entry.title}</h2>
-        <p className="text-stone-600 mb-8 leading-relaxed">{entry.content}</p>
+        <p className="text-stone-600 mb-8 leading-relaxed whitespace-pre-line">
+          {entry.content}
+        </p>
         
         {entry.type === 'trip' && (
-          <button onClick={onOpenTrip} className="appearance-none !bg-stone-900 text-white px-8 py-4 rounded-full flex items-center gap-2 hover:bg-blue-700 active:scale-95 transition-all shadow-lg">
+          <button onClick={onOpenTrip} className="appearance-none bg-stone-900! text-white px-8 py-4 rounded-full flex items-center gap-2 hover:bg-blue-700 active:scale-95 transition-all shadow-lg">
             <MapIcon size={18} /> <span className="font-semibold">View Driving Route</span>
           </button>
         )}
@@ -110,8 +113,21 @@ export const TimelineItem = ({ entry, onOpenTrip }) => {
         )} 
       </div>
       
-      <div className={`flex-1 w-full max-w-sm mx-auto bg-white p-4 shadow-2xl border-4 border-white transition-all duration-1000 ${inView ? 'rotate-0' : 'rotate-3'} relative overflow-hidden ${entry.isPortrait ? 'aspect-[3/4]' : 'relative h-64 md:h-80'}`}>
+      {/* <div className={`flex-1 w-full max-w-sm mx-auto bg-white p-4 shadow-2xl border-4 border-white transition-all duration-1000 ${inView ? 'rotate-0' : 'rotate-3'} relative overflow-hidden ${entry.isPortrait ? 'aspect-3/4' : 'relative h-64 md:h-80'}`}>
         <ImageWithLoading src={entry.imageUrl} alt={entry.title} />
+      </div> */}
+
+      {/* Updated Media Container */}
+<div className={`flex-1 w-full max-w-sm mx-auto bg-white p-4 shadow-2xl border-4 border-white transition-all duration-1000 ${inView ? 'rotate-0' : 'rotate-3'} relative overflow-hidden ${entry.isPortrait ? 'aspect-3/5' : 'relative h-64 md:h-80'}`}>
+        {entry.type === 'video' ? (
+          <TimelineVideo
+            publicId={entry.imageUrl} 
+            inView={inView} 
+            title={entry.title} 
+          />
+        ) : (
+          <ImageWithLoading src={entry.imageUrl} alt={entry.title} />
+        )}
       </div>
 
       <AnimatePresence>
